@@ -78,7 +78,7 @@ input[type="text"],textarea { text-transform:uppercase; }
   letter-spacing:2px; color:#10b981;
   border:1px solid rgba(16,185,129,0.4); background:rgba(16,185,129,0.08);
   padding:5px 14px; border-radius:20px; cursor:pointer; text-transform:uppercase;
-  transition:all 0.15s; display:none;
+  transition:all 0.15s;
 }
 .btn-github:hover { background:rgba(16,185,129,0.18); border-color:#10b981; }
 .btn-github:disabled { opacity:0.5; cursor:not-allowed; }
@@ -981,12 +981,7 @@ async function boot() {
     document.getElementById('pill-cap').textContent  = `${S.capas.length} CAPAS`;
     document.getElementById('loading').classList.add('hidden');
     document.getElementById('btn-export').addEventListener('click', exportData);
-    // Mostrar botón GitHub solo si config.local.js cargó el token
-    if (typeof GITHUB_TOKEN !== 'undefined' && GITHUB_TOKEN) {
-      const btnGh = document.getElementById('btn-github');
-      btnGh.style.display = '';
-      btnGh.addEventListener('click', guardarAGitHub);
-    }
+    document.getElementById('btn-github').addEventListener('click', guardarAGitHub);
   } catch(err) {
     console.error(err);
     document.getElementById('loading').classList.add('hidden');
