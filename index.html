@@ -355,43 +355,39 @@ textarea.notas-ta::placeholder { color:var(--text-3); font-style:italic; }
   .hdr-actions { display:none; }
 }
 
-/* ── ZONING EDIT MODAL ─────────────────────────── */
-#zoning-modal {
-  display:none; position:fixed; inset:0; z-index:9000;
-  background:rgba(0,0,0,0.75); align-items:center; justify-content:center;
+/* ── ZONING HANDLES ─────────────────────────────── */
+.zh {
+  position:absolute; width:18px; height:18px; pointer-events:all;
+  border-radius:50%; background:#fff; border:2.5px solid #1a1a1a;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 2px 8px rgba(0,0,0,0.6); z-index:701;
+  transform:translate(-50%,-50%);
 }
-.ze-panel {
-  background:var(--bg-2); border:1px solid var(--borde-2);
-  border-radius:8px; width:360px; overflow:hidden;
-  box-shadow:0 20px 60px rgba(0,0,0,0.8);
+.zh::after { content:''; width:5px; height:5px; border-radius:50%; background:#1a1a1a; }
+.zh-nw { cursor:nw-resize; } .zh-ne { cursor:ne-resize; }
+.zh-sw { cursor:sw-resize; } .zh-se { cursor:se-resize; }
+.zh-center { cursor:move; }
+.zh-rotate {
+  background:#c9a84c; border-color:#1a1a1a; cursor:crosshair;
+  font-size:12px; color:#1a1a1a; font-weight:900; line-height:1;
 }
-.ze-header {
-  display:flex; justify-content:space-between; align-items:center;
-  padding:16px 20px; background:var(--bg-3); border-bottom:1px solid var(--borde);
-  font-family:'Poppins',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px;
-}
-.ze-header button { background:transparent; border:none; color:var(--text-2); cursor:pointer; font-size:14px; padding:0; }
-.ze-header button:hover { color:var(--text); }
-.ze-body { padding:18px 20px; display:flex; flex-direction:column; gap:14px; }
-.ze-row { display:flex; align-items:center; gap:12px; }
-.ze-label {
+.zh-rotate::after { display:none; }
+.zh-status {
+  position:absolute; pointer-events:none; transform:translateX(-50%);
   font-family:'Poppins',sans-serif; font-size:9px; font-weight:700;
-  letter-spacing:1.5px; color:var(--text-3); width:120px; flex-shrink:0;
+  letter-spacing:1px; color:#c9a84c; background:rgba(30,30,30,0.92);
+  padding:5px 12px; border-radius:3px; white-space:nowrap;
+  border:1px solid rgba(201,168,76,0.4); z-index:702;
 }
-.ze-input {
-  flex:1; background:var(--bg-3); border:1px solid var(--borde-2);
-  border-radius:3px; padding:7px 10px; font-size:11px; color:var(--text);
-  font-family:'Open Sans',sans-serif; outline:none; text-transform:none;
+#zoning-edit-bar {
+  display:none; position:absolute; top:14px; right:14px; z-index:900;
+  background:var(--bg-3); border:1px solid var(--borde-2); border-radius:6px;
+  padding:10px 14px; align-items:center; gap:10px;
+  box-shadow:0 6px 24px rgba(0,0,0,0.6);
 }
-.ze-input:focus { border-color:var(--text); }
-.ze-range { flex:1; accent-color:var(--text); cursor:pointer; }
-.ze-val {
-  font-family:'Poppins',sans-serif; font-size:10px; font-weight:700;
-  color:var(--text); min-width:44px; text-align:right;
-}
-.ze-footer {
-  display:flex; gap:8px; justify-content:flex-end;
-  padding:14px 20px; border-top:1px solid var(--borde);
+#zoning-edit-bar span {
+  font-family:'Poppins',sans-serif; font-size:9px; font-weight:700;
+  letter-spacing:1.5px; color:var(--accent);
 }
 </style>
 </head>
@@ -454,6 +450,12 @@ textarea.notas-ta::placeholder { color:var(--text-3); font-style:italic; }
     <div class="legend" id="legend" style="display:none">
       <strong>LEYENDA</strong>
       <div id="legend-rows"></div>
+    </div>
+
+    <div id="zoning-edit-bar">
+      <span>✎ ZONING · MODO EDICIÓN</span>
+      <button class="btn-action" onclick="exitZoningEditMode(false)">CANCELAR</button>
+      <button class="btn-action primary" onclick="exitZoningEditMode(true)">ACEPTAR</button>
     </div>
   </div>
 
@@ -594,11 +596,12 @@ const ZONING_BASE_W = 0.03;
 const ZONING_BASE_H = 0.025;
 let _zoningSnapshot = null;
 
-function zoningBounds() {
-  const hw = (ZONING_BASE_W * S.zoning.scale) / 2;
-  const hh = (ZONING_BASE_H * S.zoning.scale) / 2;
-  return [[S.zoning.lat - hh, S.zoning.lng - hw],
-          [S.zoning.lat + hh, S.zoning.lng + hw]];
+function zoningBounds(st) {
+  const z  = st || S.zoning;
+  const hw = (ZONING_BASE_W * z.scale) / 2;
+  const hh = (ZONING_BASE_H * z.scale) / 2;
+  return [[z.lat - hh, z.lng - hw],
+          [z.lat + hh, z.lng + hw]];
 }
 
 function applyZoningRotation() {
@@ -625,7 +628,7 @@ function initZoningOverlay() {
     if (el) {
       el.style.transformOrigin = 'center center';
       applyZoningRotation();
-      el.addEventListener('contextmenu', e => { e.preventDefault(); openZoningEditor(); });
+      el.addEventListener('contextmenu', e => { e.preventDefault(); enterZoningEditMode(); });
     }
   });
   if (S.zoning.visible) S.zoningLayer.addTo(S.map);
@@ -645,7 +648,7 @@ function buildZoningLayerControl() {
         <span class="lc-dot" style="background:rgba(255,255,255,0.25)"></span>
         <span>ZONING</span>
       </label>
-      <button class="btn-edit" onclick="openZoningEditor()" style="font-size:8px;padding:2px 8px;letter-spacing:1px">✎ EDITAR</button>
+      <button class="btn-edit" onclick="enterZoningEditMode()" style="font-size:8px;padding:2px 8px;letter-spacing:1px">✎ EDITAR</button>
     </div>
     <div class="lc-opacity">
       <span>OPACIDAD</span>
@@ -670,50 +673,123 @@ function buildZoningLayerControl() {
   });
 }
 
-function openZoningEditor() {
+// ── ZONING INTERACTIVE EDIT ──────────────────────────────────────────────────
+let _zoningEditing = false;
+let _zoningDrag    = null;
+
+function clientToContainer(cx, cy) {
+  const r = document.getElementById('map').getBoundingClientRect();
+  return L.point(cx - r.left, cy - r.top);
+}
+
+function enterZoningEditMode() {
+  if (_zoningEditing) return;
   _zoningSnapshot = { ...S.zoning };
-  document.getElementById('ze-lat').value   = S.zoning.lat;
-  document.getElementById('ze-lng').value   = S.zoning.lng;
-  document.getElementById('ze-scale').value = S.zoning.scale;
-  document.getElementById('ze-scale-v').textContent = S.zoning.scale.toFixed(2) + '×';
-  document.getElementById('ze-rot').value   = S.zoning.rotation;
-  document.getElementById('ze-rot-v').textContent   = S.zoning.rotation + '°';
-
-  document.getElementById('ze-scale').oninput = e => {
-    const v = parseFloat(e.target.value);
-    document.getElementById('ze-scale-v').textContent = v.toFixed(2) + '×';
-    S.zoning.scale = v;
-    applyZoningState();
-  };
-  document.getElementById('ze-rot').oninput = e => {
-    const v = parseInt(e.target.value);
-    document.getElementById('ze-rot-v').textContent = v + '°';
-    S.zoning.rotation = v;
-    applyZoningState();
-  };
-  document.getElementById('zoning-modal').style.display = 'flex';
+  _zoningEditing  = true;
+  const el = S.zoningLayer?.getElement?.();
+  if (el) el.style.outline = '2px dashed rgba(201,168,76,0.8)';
+  S.map.scrollWheelZoom.disable();
+  S.map.dragging.disable();
+  renderZoningHandles();
+  S.map.on('zoom move zoomend moveend', updateZoningHandles);
+  document.getElementById('zoning-edit-bar').style.display = 'flex';
 }
 
-function applyZoningFromModal() {
-  const lat   = parseFloat(document.getElementById('ze-lat').value);
-  const lng   = parseFloat(document.getElementById('ze-lng').value);
-  if (!isNaN(lat)) S.zoning.lat = lat;
-  if (!isNaN(lng)) S.zoning.lng = lng;
-  S.zoning.scale    = parseFloat(document.getElementById('ze-scale').value) || 1;
-  S.zoning.rotation = parseInt(document.getElementById('ze-rot').value)     || 0;
+function exitZoningEditMode(save) {
+  _zoningEditing = false;
+  const el = S.zoningLayer?.getElement?.();
+  if (el) el.style.outline = '';
+  if (!save && _zoningSnapshot) { Object.assign(S.zoning, _zoningSnapshot); applyZoningState(); }
+  else if (save)                { persist(); showToast('✓ ZONING GUARDADO', 'success'); }
+  const h = document.getElementById('zoning-handles');
+  if (h) h.innerHTML = '';
+  S.map.off('zoom move zoomend moveend', updateZoningHandles);
+  S.map.scrollWheelZoom.enable();
+  S.map.dragging.enable();
+  document.getElementById('zoning-edit-bar').style.display = 'none';
+}
+
+function renderZoningHandles() {
+  let h = document.getElementById('zoning-handles');
+  if (!h) {
+    h = document.createElement('div');
+    h.id = 'zoning-handles';
+    h.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:700;overflow:visible;';
+    document.getElementById('map').appendChild(h);
+  }
+  h.innerHTML = `
+    <div class="zh zh-center" id="zh-center"></div>
+    <div class="zh zh-nw"     id="zh-nw"></div>
+    <div class="zh zh-ne"     id="zh-ne"></div>
+    <div class="zh zh-sw"     id="zh-sw"></div>
+    <div class="zh zh-se"     id="zh-se"></div>
+    <div class="zh zh-rotate" id="zh-rotate">↻</div>
+    <div class="zh-status"    id="zh-status"></div>`;
+
+  [['zh-center','move'],['zh-nw','scale'],['zh-ne','scale'],
+   ['zh-sw','scale'],['zh-se','scale'],['zh-rotate','rotate']].forEach(([id, type]) => {
+    document.getElementById(id).addEventListener('mousedown', e => {
+      e.preventDefault(); e.stopPropagation();
+      const bounds    = zoningBounds();
+      const mapCenter = S.map.latLngToContainerPoint([S.zoning.lat, S.zoning.lng]);
+      const corners   = { 'zh-nw':[bounds[1][0],bounds[0][1]], 'zh-ne':[bounds[1][0],bounds[1][1]],
+                          'zh-sw':[bounds[0][0],bounds[0][1]], 'zh-se':[bounds[0][0],bounds[1][1]] };
+      const cLL       = corners[id];
+      const cPx       = cLL ? S.map.latLngToContainerPoint(cLL) : null;
+      const startDist = cPx ? Math.hypot(cPx.x - mapCenter.x, cPx.y - mapCenter.y) : null;
+      _zoningDrag = { type, startCX: e.clientX, startCY: e.clientY,
+                      startState: { ...S.zoning }, mapCenter, startDist };
+      document.addEventListener('mousemove', onZoningMouseMove);
+      document.addEventListener('mouseup',   onZoningMouseUp);
+    });
+  });
+  updateZoningHandles();
+}
+
+function updateZoningHandles() {
+  if (!_zoningEditing || !S.zoningLayer) return;
+  const b  = zoningBounds();
+  const nw = S.map.latLngToContainerPoint([b[1][0], b[0][1]]);
+  const ne = S.map.latLngToContainerPoint([b[1][0], b[1][1]]);
+  const sw = S.map.latLngToContainerPoint([b[0][0], b[0][1]]);
+  const se = S.map.latLngToContainerPoint([b[0][0], b[1][1]]);
+  const c  = S.map.latLngToContainerPoint([S.zoning.lat, S.zoning.lng]);
+  const rx = (nw.x + ne.x) / 2, ry = Math.min(nw.y, ne.y) - 34;
+  [['zh-center',c],['zh-nw',nw],['zh-ne',ne],['zh-sw',sw],['zh-se',se],['zh-rotate',{x:rx,y:ry}]].forEach(([id,p]) => {
+    const el = document.getElementById(id);
+    if (el) { el.style.left = p.x + 'px'; el.style.top = p.y + 'px'; }
+  });
+  const lbl = document.getElementById('zh-status');
+  if (lbl) {
+    lbl.style.left = c.x + 'px';
+    lbl.style.top  = (Math.max(sw.y, se.y) + 14) + 'px';
+    lbl.textContent = `LAT: ${S.zoning.lat.toFixed(4)} | LNG: ${S.zoning.lng.toFixed(4)} | ESCALA: ${S.zoning.scale.toFixed(2)}× | ROT: ${S.zoning.rotation}°`;
+  }
+}
+
+function onZoningMouseMove(e) {
+  if (!_zoningDrag) return;
+  const { type, startCX, startCY, startState, mapCenter, startDist } = _zoningDrag;
+  if (type === 'move') {
+    const newLL = S.map.containerPointToLatLng(L.point(mapCenter.x + e.clientX - startCX, mapCenter.y + e.clientY - startCY));
+    S.zoning.lat = newLL.lat; S.zoning.lng = newLL.lng;
+  } else if (type === 'scale' && startDist > 0) {
+    const mp = clientToContainer(e.clientX, e.clientY);
+    const d  = Math.hypot(mp.x - mapCenter.x, mp.y - mapCenter.y);
+    S.zoning.scale = Math.max(0.1, Math.min(8, startState.scale * (d / startDist)));
+  } else if (type === 'rotate') {
+    const mp  = clientToContainer(e.clientX, e.clientY);
+    const ang = Math.atan2(mp.x - mapCenter.x, mapCenter.y - mp.y) * 180 / Math.PI;
+    S.zoning.rotation = ((Math.round(ang) % 360) + 360) % 360;
+  }
   applyZoningState();
+  updateZoningHandles();
 }
 
-function cancelZoningEditor() {
-  if (_zoningSnapshot) { Object.assign(S.zoning, _zoningSnapshot); applyZoningState(); }
-  document.getElementById('zoning-modal').style.display = 'none';
-}
-
-function saveZoningEdits() {
-  applyZoningFromModal();
-  applyZoningState(true);
-  document.getElementById('zoning-modal').style.display = 'none';
-  showToast('✓ ZONING GUARDADO', 'success');
+function onZoningMouseUp() {
+  _zoningDrag = null;
+  document.removeEventListener('mousemove', onZoningMouseMove);
+  document.removeEventListener('mouseup',   onZoningMouseUp);
 }
 
 // ── MAP ──────────────────────────────────────────────────────────────────────
@@ -1280,44 +1356,6 @@ async function boot() {
 boot();
 </script>
 
-<!-- ZONING EDIT MODAL -->
-<div id="zoning-modal">
-  <div class="ze-panel">
-    <div class="ze-header">
-      <span>✎ EDITAR · ZONING</span>
-      <button onclick="cancelZoningEditor()">✕</button>
-    </div>
-    <div class="ze-body">
-      <div class="ze-row">
-        <label class="ze-label">LATITUD CENTRO</label>
-        <input id="ze-lat" class="ze-input" type="number" step="0.0001">
-      </div>
-      <div class="ze-row">
-        <label class="ze-label">LONGITUD CENTRO</label>
-        <input id="ze-lng" class="ze-input" type="number" step="0.0001">
-      </div>
-      <div class="ze-row">
-        <label class="ze-label">ESCALA</label>
-        <div style="display:flex;align-items:center;gap:8px;flex:1">
-          <input id="ze-scale" class="ze-range" type="range" min="0.1" max="3.0" step="0.05">
-          <span class="ze-val" id="ze-scale-v">1.00×</span>
-        </div>
-      </div>
-      <div class="ze-row">
-        <label class="ze-label">ROTACIÓN</label>
-        <div style="display:flex;align-items:center;gap:8px;flex:1">
-          <input id="ze-rot" class="ze-range" type="range" min="0" max="360" step="1">
-          <span class="ze-val" id="ze-rot-v">0°</span>
-        </div>
-      </div>
-    </div>
-    <div class="ze-footer">
-      <button class="btn-action" onclick="cancelZoningEditor()">CANCELAR</button>
-      <button class="btn-action" onclick="applyZoningFromModal()">PREVISUALIZAR</button>
-      <button class="btn-action primary" onclick="saveZoningEdits()">ACEPTAR</button>
-    </div>
-  </div>
-</div>
 
 </body>
 </html>
