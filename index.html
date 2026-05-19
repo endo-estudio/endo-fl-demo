@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ENDO · FIND LANDING · VISOR TERRITORIAL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root {
+  --bg:      #1E1E1E;
+  --bg-2:    #242424;
+  --bg-3:    #2A2A2A;
+  --bg-4:    #333333;
+  --borde:   #353535;
+  --borde-2: #484848;
+  --text:    #F1F1F1;
+  --text-2:  #B8B8B8;
+  --text-3:  #7E7E7E;
+  --accent:  #c9a84c;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html,body {
+  font-family:'Open Sans',sans-serif;
+  background:var(--bg); color:var(--text);
+  height:100vh; overflow:hidden;
+  text-transform:uppercase;
+}
+h1,h2,h3,h4 { font-family:'Poppins',sans-serif; font-weight:700; }
+input,textarea,button,select { font-family:'Open Sans',sans-serif; }
+input[type="text"],textarea { text-transform:uppercase; }
+
+/* ── HEADER ─────────────────────────────────── */
+.app-header {
+  background:var(--bg); border-bottom:1px solid var(--borde);
+  display:flex; align-items:center;
+  height:62px; flex-shrink:0; padding:0 24px; gap:22px;
+}
+.logo-endo { height:28px; color:var(--text); flex-shrink:0; }
+.logo-endo svg { height:100%; width:auto; display:block; }
+.hdr-div { width:1px; height:32px; background:var(--borde); }
+.hdr-titles { flex:1; }
+.hdr-titles h1 {
+  font-size:13px; font-weight:600; letter-spacing:1.5px;
+  outline:none; cursor:text;
+  border-bottom:1px solid transparent; padding-bottom:1px;
+  display:inline-block; min-width:20px;
+}
+.hdr-titles h1:hover,.hdr-titles h1:focus { border-color:var(--borde-2); }
+.hdr-sub {
+  font-size:9px; color:var(--text-3); font-weight:500;
+  margin-top:4px; letter-spacing:2px;
+  outline:none; cursor:text;
+  border-bottom:1px solid transparent; padding-bottom:1px;
+  display:inline-block; min-width:20px;
+}
+.hdr-sub:hover,.hdr-sub:focus { border-color:var(--borde-2); }
+.hdr-actions { display:flex; align-items:center; gap:8px; }
+.meta-pill {
+  font-family:'Poppins',sans-serif; font-size:9px; letter-spacing:2px;
+  color:var(--text-2); border:1px solid var(--borde-2);
+  padding:5px 11px; border-radius:20px; font-weight:600;
+}
+.btn-export {
+  font-family:'Poppins',sans-serif; font-size:9px; font-weight:700;
+  letter-spacing:2px; color:var(--accent);
+  border:1px solid rgba(201,168,76,0.4); background:rgba(201,168,76,0.08);
+  padding:5px 14px; border-radius:20px; cursor:pointer; text-transform:uppercase;
+  transition:all 0.15s;
+}
+.btn-export:hover { background:rgba(201,168,76,0.2); border-color:var(--accent); }
+
+/* ── LAYOUT ─────────────────────────────────── */
+.app-body {
+  display:grid; grid-template-columns:1fr 380px 320px;
+  height:calc(100vh - 62px);
+}
+
+/* ── MAP ─────────────────────────────────────── */
+.map-wrap { position:relative; background:var(--bg-2); }
+#map { width:100%; height:100%; }
+
+.loading-overlay {
+  position:absolute; inset:0; z-index:2000;
+  background:var(--bg-2); display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:16px;
+}
+.loading-overlay.hidden { display:none; }
+.spinner {
+  width:30px; height:30px; border:2px solid var(--borde-2);
+  border-top-color:var(--accent); border-radius:50%;
+  animation:spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+.loading-text {
+  font-family:'Poppins',sans-serif; font-size:10px;
+  font-weight:700; letter-spacing:3px; color:var(--text-3);
+}
+
+.error-box {
+  position:absolute; inset:0; z-index:2000;
+  background:var(--bg-2); display:none; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:12px; padding:40px; text-align:center;
+}
+.error-box.show { display:flex; }
+.error-box h3 { font-size:13px; letter-spacing:2px; color:#ef4444; }
+.error-box p { font-size:10px; line-height:1.8; letter-spacing:1px; color:var(--text-3); max-width:360px; }
+.error-box code {
+  font-size:11px; background:var(--bg-3); border:1px solid var(--borde-2);
+  padding:10px 16px; border-radius:4px; color:var(--accent);
+  display:block; text-transform:none; letter-spacing:0.5px;
+}
+
+/* ── LAYER CONTROL ──────────────────────────── */
+.layer-control {
+  position:absolute; top:14px; left:14px; z-index:800;
+  background:var(--bg-3); border:1px solid var(--borde);
+  border-radius:6px; padding:14px 16px; min-width:260px;
+  box-shadow:0 6px 24px rgba(0,0,0,0.6);
+  max-height:calc(100vh - 120px); overflow-y:auto;
+}
+.lc-title {
+  font-family:'Poppins',sans-serif; font-size:9px; font-weight:700;
+  letter-spacing:2.5px; color:var(--text-3); margin-bottom:10px;
+}
+.lc-section {
+  font-family:'Poppins',sans-serif; font-size:9px; font-weight:700;
+  letter-spacing:1.5px; color:var(--text-3); margin:8px 0 4px;
+}
+.lc-divider { height:1px; background:var(--borde); margin:10px 0; }
+.lc-row {
+  display:flex; align-items:center; gap:9px; padding:4px 0;
+  cursor:pointer; font-size:11px; font-weight:600; letter-spacing:0.8px;
+}
+.lc-row input[type=checkbox],.lc-row input[type=radio] {
+  cursor:pointer; accent-color:var(--text); width:14px; height:14px;
+}
+.lc-dot { width:12px; height:12px; border-radius:3px; flex-shrink:0; border:1px solid rgba(255,255,255,0.12); }
+.lc-opacity {
+  display:flex; align-items:center; gap:6px;
+  padding:2px 0 8px 22px; font-size:9px; color:var(--text-3); letter-spacing:1px;
+}
+.lc-opacity input[type=range] { flex:1; accent-color:var(--text); height:12px; }
+.lc-val { font-family:'Poppins',sans-serif; font-size:9px; color:var(--text); min-width:32px; text-align:right; font-weight:700; }
+
+/* ── LEGEND ─────────────────────────────────── */
+.legend {
+  position:absolute; bottom:14px; left:14px; z-index:800;
+  background:var(--bg-3); border:1px solid var(--borde);
+  border-radius:6px; padding:12px 14px;
+  font-size:10px; color:var(--text-2); max-width:260px;
+  box-shadow:0 6px 24px rgba(0,0,0,0.5);
+}
+.legend strong {
+  font-family:'Poppins',sans-serif; color:var(--text); font-size:9px;
+  letter-spacing:2.5px; display:block; margin-bottom:8px; font-weight:700;
+}
+.legend-row { display:flex; align-items:center; gap:8px; margin:3px 0; font-weight:600; }
+.legend-sw { width:14px; height:10px; border-radius:2px; flex-shrink:0; }
+
+/* ── INFO PANEL ─────────────────────────────── */
+.info-panel {
+  background:var(--bg-2); border-left:1px solid var(--borde);
+  display:flex; flex-direction:column; overflow:hidden;
+}
+.panel-header { padding:22px 22px 18px; border-bottom:1px solid var(--borde); background:var(--bg); }
+.ph-tag { font-family:'Poppins',sans-serif; font-size:9px; font-weight:700; letter-spacing:2.5px; color:var(--text-3); margin-bottom:8px; }
+.panel-header h2 { font-size:17px; line-height:1.25; margin-bottom:4px; letter-spacing:0.5px; }
+.ph-sub { font-size:11px; color:var(--text-2); font-weight:600; letter-spacing:1px; }
+.panel-body { flex:1; overflow-y:auto; padding:18px 22px; }
+
+.empty-state { text-align:center; padding:60px 20px; color:var(--text-3); }
+.empty-icon { font-size:36px; opacity:0.35; margin-bottom:12px; }
+.empty-state p { font-size:11px; line-height:1.7; letter-spacing:1.5px; font-weight:600; }
+
+/* fields */
+.field { margin-bottom:14px; }
+.field-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+.field-label { font-family:'Poppins',sans-serif; font-size:9px; font-weight:700; letter-spacing:2.5px; color:var(--text-3); }
+.btn-edit {
+  background:transparent; border:1px solid var(--borde-2); color:var(--text-2);
+  font-family:'Poppins',sans-serif; font-size:9px; font-weight:600; letter-spacing:1.5px;
+  padding:3px 10px; border-radius:3px; cursor:pointer; text-transform:uppercase; transition:all 0.15s;
+}
+.btn-edit:hover { background:var(--bg-4); color:var(--text); border-color:var(--text-3); }
+.btn-edit.guardar { background:var(--text); color:var(--bg); border-color:var(--text); }
+.btn-edit.guardar:hover { background:#fff; }
+
+.field-content {
+  background:var(--bg-3); border:1px solid var(--borde); border-radius:4px;
+  padding:11px 13px; font-size:11px; color:var(--text);
+  line-height:1.7; white-space:pre-wrap; letter-spacing:0.3px;
+  font-weight:500; min-height:36px;
+}
+.field-content.vacio { color:var(--text-3); font-style:italic; }
+textarea.field-input,input.field-input {
+  display:none; width:100%; background:var(--bg); border:1px solid var(--borde-2);
+  border-radius:4px; padding:11px 13px; font-size:11px; color:var(--text);
+  line-height:1.7; letter-spacing:0.3px; outline:none; resize:vertical;
+  text-transform:uppercase;
+}
+textarea.field-input { min-height:80px; }
+textarea.field-input:focus,input.field-input:focus { border-color:var(--text); }
+
+.feat-header {
+  border-radius:4px; padding:14px 16px; margin-bottom:14px; border-left:4px solid;
+}
+.feat-header h3 { font-size:15px; letter-spacing:0.5px; margin-bottom:3px; }
+.feat-sub { font-size:10px; color:var(--text-3); letter-spacing:1.5px; font-weight:600; }
+
+.prop-table { background:var(--bg-3); border:1px solid var(--borde); border-radius:4px; overflow:hidden; margin-bottom:14px; }
+.prop-row { display:flex; border-bottom:1px solid var(--borde); font-size:10.5px; }
+.prop-row:last-child { border-bottom:none; }
+.prop-key { background:var(--bg-4); padding:8px 12px; flex:0 0 120px; font-family:'Poppins',sans-serif; font-size:9px; font-weight:700; letter-spacing:1.5px; color:var(--text-3); }
+.prop-val { padding:8px 12px; color:var(--text); font-weight:500; flex:1; word-break:break-word; }
+
+/* ── NOTES PANEL ────────────────────────────── */
+.notas-panel {
+  background:var(--bg); border-left:1px solid var(--borde);
+  display:flex; flex-direction:column; overflow:hidden;
+}
+.notas-header {
+  padding:22px 22px 18px; border-bottom:1px solid var(--borde);
+  background:var(--bg-2); display:flex; justify-content:space-between; align-items:flex-start;
+}
+.notas-header h3 { font-family:'Poppins',sans-serif; font-size:13px; letter-spacing:2.5px; font-weight:700; }
+.nh-sub { font-size:9px; color:var(--text-3); letter-spacing:1.5px; margin-top:3px; font-weight:600; }
+.notas-status { display:inline-flex; align-items:center; gap:6px; font-family:'Poppins',sans-serif; font-size:9px; letter-spacing:2px; color:var(--text-3); font-weight:700; }
+.notas-status .dot { width:6px; height:6px; border-radius:50%; background:var(--text-3); }
+.notas-status.saved .dot { background:#10b981; }
+.notas-status.saved { color:#10b981; }
+.notas-status.editing .dot { background:var(--accent); }
+.notas-status.editing { color:var(--accent); }
+
+.notas-body { flex:1; overflow-y:auto; padding:22px; display:flex; flex-direction:column; min-height:0; }
+.notas-empty { flex:1; display:flex; align-items:center; justify-content:center; text-align:center; color:var(--text-3); }
+.notas-empty p { font-size:11px; line-height:1.7; letter-spacing:1.5px; max-width:220px; font-weight:600; }
+.notas-target { background:var(--bg-3); border:1px solid var(--borde); border-radius:4px; padding:10px 14px; margin-bottom:14px; flex-shrink:0; }
+.nat-label { font-family:'Poppins',sans-serif; font-size:9px; letter-spacing:2px; color:var(--text-3); margin-bottom:3px; font-weight:600; }
+.nat-value { font-family:'Poppins',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.5px; }
+textarea.notas-ta {
+  flex:1; width:100%; background:var(--bg-2); border:1px solid var(--borde-2);
+  border-radius:4px; padding:14px 16px; font-size:11px; color:var(--text);
+  line-height:1.8; letter-spacing:0.5px; resize:none; outline:none;
+  text-transform:uppercase; min-height:160px; font-weight:500;
+}
+textarea.notas-ta:focus { border-color:var(--text); }
+textarea.notas-ta::placeholder { color:var(--text-3); font-style:italic; }
+.notas-footer { margin-top:12px; display:flex; gap:8px; justify-content:flex-end; flex-shrink:0; }
+.btn-action {
+  background:transparent; border:1px solid var(--borde-2); color:var(--text-2);
+  font-family:'Poppins',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px;
+  padding:8px 14px; border-radius:3px; cursor:pointer; text-transform:uppercase;
+}
+.btn-action:hover { background:var(--bg-4); color:var(--text); }
+.btn-action.primary { background:var(--text); color:var(--bg); border-color:var(--text); }
+.btn-action.primary:hover { background:#fff; }
+
+/* ── MISC ─────────────────────────────────── */
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--borde-2); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:var(--text-3); }
+
+.leaflet-tooltip {
+  font-family:'Poppins',sans-serif !important; font-weight:700 !important;
+  font-size:10px !important; letter-spacing:1.5px !important;
+  background:var(--bg) !important; color:var(--text) !important;
+  border:1px solid var(--borde-2) !important; padding:4px 9px !important;
+  border-radius:3px !important; box-shadow:0 2px 8px rgba(0,0,0,0.5) !important;
+  text-transform:uppercase !important;
+}
+.leaflet-tooltip-top:before { border-top-color:var(--bg) !important; }
+.leaflet-control-attribution { background:rgba(30,30,30,0.85) !important; color:var(--text-3) !important; }
+.leaflet-control-attribution a { color:var(--text-2) !important; }
+.leaflet-bar a { background:var(--bg-3) !important; color:var(--text) !important; border-color:var(--borde) !important; }
+.leaflet-bar a:hover { background:var(--bg-4) !important; }
+
+@media (max-width:1280px) { .app-body { grid-template-columns:1fr 340px 280px; } }
+@media (max-width:1080px) {
+  .app-body { grid-template-columns:1fr 320px; grid-template-rows:65vh auto; }
+  .notas-panel { grid-column:1/-1; border-left:none; border-top:1px solid var(--borde); max-height:50vh; }
+}
+@media (max-width:720px) {
+  .app-body { grid-template-columns:1fr; }
+  .info-panel,.notas-panel { border-left:none; border-top:1px solid var(--borde); }
+  .hdr-actions { display:none; }
+}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="logo-endo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 183.16 62.67">
+      <defs><style>.c1{fill:currentColor}.c2{fill:currentColor;fill-rule:evenodd}</style></defs>
+      <g>
+        <path class="c2" d="M125.43,0h10.63l.02,16.87c.02,16.42.02,16.82.29,15.9.16-.52.52-1.52.79-2.22.29-.7.89-1.92,1.36-2.7.46-.78,1.33-2.03,1.94-2.78.59-.73,1.62-1.79,2.27-2.35.65-.57,1.79-1.43,2.54-1.9.75-.49,1.98-1.19,2.78-1.56.79-.38,2.11-.9,2.94-1.17.82-.27,2.3-.63,3.25-.79.95-.16,2.6-.35,3.65-.41,1.1-.06,2.73-.03,3.86.08,1.06.1,2.6.32,3.4.49.81.17,2.11.54,2.9.79.79.25,2.11.81,2.93,1.22.83.43,2.05,1.13,2.7,1.56.65.44,1.89,1.48,2.78,2.32.87.84,1.98,2.09,2.49,2.78.49.7,1.17,1.79,1.52,2.44.36.65.87,1.76,1.14,2.46.27.7.67,1.98.89,2.86.21.87.46,2.44.56,3.49.11,1.13.14,2.65.08,3.73-.06,1-.22,2.4-.33,3.09-.13.7-.41,1.92-.63,2.7-.22.78-.78,2.17-1.21,3.09-.44.92-1.17,2.24-1.65,2.94-.46.7-1.4,1.87-2.09,2.6-.68.73-1.95,1.87-2.82,2.52-.94.7-2.38,1.57-3.49,2.11-1.05.51-2.48,1.11-3.17,1.33-.7.22-1.98.57-2.86.76-1.4.3-2.05.33-5.63.33s-4.22-.03-5.63-.35c-.87-.21-2.22-.57-3.02-.84-.79-.27-2-.76-2.7-1.09-.7-.33-1.95-1.05-2.78-1.6-.82-.56-2.11-1.59-2.84-2.29-.73-.7-1.68-1.73-2.14-2.3-.44-.56-1.16-1.6-1.57-2.3-.41-.7-.98-1.81-1.25-2.46s-.67-1.73-1.22-3.57l-.02,16.42h-10.16l-.02-5.47-.98.95c-.54.52-1.44,1.29-2.02,1.7-.57.41-1.75,1.08-2.62,1.49-.87.41-2.41.95-3.41,1.22-1.63.41-2.14.48-5,.54-2.71.08-3.44.03-5.08-.24-1.05-.19-2.59-.56-3.41-.83-.83-.27-2.14-.81-2.94-1.19-.79-.38-2.06-1.14-2.84-1.7-.79-.56-2-1.57-2.7-2.29-.71-.7-1.73-1.92-2.25-2.7-.54-.78-1.29-2.02-1.65-2.76-.37-.75-.92-2.06-1.75-4.52v15.79h-10.63v-12.82c0-10.36-.05-13.09-.24-14.31-.13-.83-.36-1.94-.56-2.46-.19-.52-.56-1.38-.84-1.9-.29-.52-.9-1.35-1.38-1.82-.59-.6-1.32-1.11-2.22-1.56-.75-.37-1.89-.78-2.54-.92-.89-.19-1.75-.24-3.41-.17-1.63.06-2.54.17-3.41.43-.65.19-1.68.6-2.3.92-.76.4-1.54,1-2.48,1.94-1.09,1.08-1.49,1.62-2.03,2.7-.35.75-.79,1.92-.97,2.62s-.4,2.05-.48,3.02c-.08.97-.16,6.84-.16,24.36h-10.47v-19.04H10.54l.1.44c.06.24.32,1,.57,1.7.25.7.7,1.67,1,2.14s.86,1.24,1.24,1.67c.38.44,1.14,1.14,1.71,1.57.56.43,1.67,1.08,2.44,1.46.78.38,2,.84,2.7,1.02.7.17,2.02.4,2.94.49,1.21.11,2.17.11,3.49-.02,1-.11,2.43-.37,3.17-.57.75-.22,1.86-.63,2.46-.92.62-.29,1.57-.83,2.14-1.21.57-.38,1.38-1.02,1.79-1.43.75-.71.76-.71,1.05-.4.16.17,1.27,1.46,2.48,2.86,1.21,1.4,2.38,2.73,3.02,3.4l-.57.68c-.3.38-1.16,1.17-1.9,1.76-.73.6-1.82,1.38-2.44,1.75-.62.37-1.79.94-2.62,1.27-.83.35-2.29.83-3.25,1.06-.97.24-2.49.52-3.41.63-1.06.13-2.86.17-5,.11-2.57-.05-3.73-.16-5.08-.43-.97-.19-2.4-.56-3.17-.83-.78-.25-2.11-.78-2.94-1.17-.83-.4-2.22-1.19-3.09-1.78-.94-.62-2.21-1.67-3.09-2.57-.83-.83-1.87-2.05-2.32-2.7-.46-.65-1.16-1.84-1.56-2.62-.4-.78-.94-2.08-1.21-2.86-.27-.78-.63-2.21-.83-3.17-.29-1.43-.35-2.3-.35-4.76s.06-3.33.35-4.76c.19-.97.56-2.4.83-3.17.27-.78.76-2,1.11-2.7.33-.7.97-1.81,1.4-2.46.44-.65,1.24-1.7,1.76-2.3.54-.6,1.41-1.49,1.95-1.97.56-.46,1.57-1.22,2.27-1.68.7-.46,1.81-1.09,2.46-1.43.65-.33,2.02-.87,3.02-1.21,1-.32,2.51-.71,3.33-.84.83-.14,2.33-.3,3.33-.35,1.08-.06,2.65-.03,3.81.1,1.1.1,2.76.38,3.73.63.97.24,2.32.67,3.02.94.7.29,1.67.73,2.14,1,.48.29,1.41.86,2.06,1.3.65.44,1.75,1.33,2.44,2,.68.65,1.62,1.7,2.09,2.3.46.6,1.17,1.68,1.57,2.38.4.7.92,1.78,1.17,2.38.25.6.65,1.71,1.27,3.81l.02-16.42h10l-.02,5.63,1.16-1.1c.63-.62,1.65-1.43,2.27-1.82.62-.4,1.6-.94,2.22-1.22.62-.29,1.68-.68,2.38-.9.7-.22,1.95-.51,2.78-.65.83-.14,2.29-.3,3.25-.35,1.02-.06,2.57-.03,3.73.1,1.09.1,2.67.37,3.49.57.83.22,2.11.65,2.86.98.75.33,1.81.92,2.38,1.3.57.38,1.46,1.05,1.98,1.51.52.46,1.35,1.35,1.86,2,.49.65,1.17,1.75,1.52,2.44.35.7.83,1.84,1.06,2.54.22.7.57,2.19,1.08,5.4l.43-1.43c.24-.78.65-1.97.92-2.62.27-.65.9-1.84,1.4-2.62.49-.78,1.25-1.89,1.71-2.44.44-.57,1.3-1.48,1.92-2.03.62-.57,1.68-1.4,2.38-1.87.7-.46,1.84-1.13,2.54-1.48.7-.35,1.9-.84,2.7-1.11.79-.25,1.97-.59,2.62-.73.65-.13,2.02-.32,3.02-.43,1.06-.1,2.59-.14,3.65-.08,1,.06,2.51.24,3.33.41.83.16,2.05.49,2.7.73.65.22,1.62.63,2.14.9.52.25,1.38.76,1.9,1.13.52.35,1.4,1.08,2.95,2.55l-.02-22.61ZM18.15,26.29c-.65.24-1.7.78-2.3,1.19-.62.4-1.54,1.17-2.06,1.73-.52.56-1.25,1.52-1.62,2.13-.37.62-.84,1.65-1.06,2.3-.21.65-.43,1.46-.48,1.79l-.1.59h25.07c-.14-.79-.32-1.49-.51-2.06-.17-.57-.59-1.57-.92-2.22-.35-.65-1.06-1.68-1.62-2.29-.56-.6-1.43-1.4-1.95-1.78-.52-.36-1.46-.9-2.06-1.19-.62-.27-1.76-.63-2.54-.79-.86-.17-2.03-.29-2.94-.29-.83,0-2.02.11-2.62.22-.62.11-1.65.41-2.3.67ZM107.34,26.83c-.65.27-1.67.81-2.27,1.19-.59.38-1.46,1.11-1.95,1.62-.49.49-1.22,1.41-1.63,2.02-.4.62-.95,1.71-1.24,2.46-.27.75-.62,2-.76,2.78-.21,1.06-.25,1.95-.21,3.49.06,1.4.19,2.51.43,3.41.19.75.63,1.92.97,2.62.35.7,1,1.76,1.46,2.36.46.6,1.3,1.48,1.87,1.94.57.44,1.43,1.03,1.9,1.3.48.27,1.41.68,2.06.9.65.22,1.76.48,2.46.57.71.11,1.97.14,2.86.1.87-.05,2.05-.21,2.62-.37.57-.14,1.52-.49,2.14-.76.6-.29,1.46-.75,1.9-1.05.43-.3,1.14-.87,1.57-1.27.41-.4,1.08-1.14,1.44-1.67.37-.52.9-1.4,1.17-1.94.27-.56.68-1.62.92-2.38.4-1.32.43-1.59.43-4.41s-.03-3.09-.44-4.44c-.24-.78-.71-1.97-1.06-2.62-.35-.65-1-1.63-1.43-2.17-.43-.56-1.22-1.35-1.78-1.79-.54-.43-1.56-1.06-2.25-1.43-.7-.35-1.84-.78-2.54-.95-.79-.21-1.95-.36-3.09-.4-1.24-.05-2.24,0-3.09.17-.7.13-1.81.46-2.46.71ZM154.31,26.77c-.65.24-1.7.76-2.3,1.16-.62.41-1.68,1.33-2.36,2.08-.98,1.05-1.41,1.67-2.02,2.92-.41.87-.87,2.02-1,2.54-.14.52-.32,1.67-.43,2.54-.1.87-.13,2.16-.06,2.86.06.7.21,1.81.35,2.46.13.65.44,1.73.71,2.38.25.65.73,1.59,1.03,2.06.32.48.82,1.17,1.14,1.56.32.38,1.06,1.08,1.68,1.57.6.49,1.71,1.17,2.46,1.52.76.37,1.97.76,2.78.92.79.17,2.09.3,2.94.3s2.14-.13,3.02-.32c1-.2,1.98-.54,2.93-1.02.78-.4,1.86-1.05,2.36-1.48.52-.41,1.36-1.25,1.87-1.87.52-.62,1.22-1.68,1.56-2.38.35-.7.78-1.84.97-2.54.24-.9.36-1.94.41-3.57.05-1.46.02-2.73-.11-3.49-.11-.65-.33-1.62-.51-2.14s-.52-1.38-.78-1.9c-.25-.52-.84-1.44-1.3-2.06-.48-.6-1.35-1.52-1.95-2.03-.6-.51-1.67-1.21-2.36-1.56-.7-.33-1.84-.76-2.54-.95-.78-.19-1.97-.35-3.1-.38-1.19-.05-2.24,0-3.02.16-.65.13-1.73.41-2.38.67Z"/>
+        <path class="c1" d="M27.36.72c-.75-.14-2.38-.29-3.65-.32-1.27-.03-2.87.02-3.57.1-.7.08-1.95.32-2.78.54-.83.21-2.11.63-2.86.95-.75.3-1.81.84-2.38,1.17-.57.33-1.6,1.06-2.29,1.62-.7.56-1.68,1.52-2.21,2.13-.51.6-1.27,1.68-1.68,2.38-.41.7-.94,1.7-1.16,2.22-.24.52-.62,1.62-.84,2.41-.22.81-.35,1.51-.29,1.54.08.05,2.33-.56,5.05-1.3l4.92-1.38c2.65-2.67,3.49-3.36,4.13-3.68.52-.29,1.52-.67,2.22-.86.97-.27,1.7-.35,3.02-.35,1.11,0,2.13.1,2.78.25.57.16,1.6.56,2.3.89.84.41,1.62.95,2.32,1.63.57.54,1.22,1.22,1.43,1.49.37.48.63.56,5.46,1.79,2.79.71,5.09,1.29,5.13,1.25.03-.03-.13-.73-.36-1.56-.22-.83-.71-2.16-1.1-2.94-.38-.79-1.13-2-1.63-2.7-.52-.7-1.48-1.78-2.13-2.38-.65-.62-1.6-1.41-2.13-1.78-.52-.35-1.6-.97-2.38-1.36-.79-.4-2-.89-2.7-1.11-.7-.22-1.87-.52-2.62-.67Z"/>
+      </g>
+    </svg>
+  </div>
+  <div class="hdr-div"></div>
+  <div class="hdr-titles">
+    <h1 id="hdr-title" contenteditable="true" spellcheck="false">FIND LANDING · VISOR TERRITORIAL</h1>
+    <div class="hdr-sub" id="hdr-sub" contenteditable="true" spellcheck="false">LOTES · SECTORES · CORREDORES · ZONIFICACIÓN</div>
+  </div>
+  <div class="hdr-actions">
+    <div class="meta-pill" id="pill-feat">— FEATURES</div>
+    <div class="meta-pill" id="pill-cap">— CAPAS</div>
+    <button class="btn-export" id="btn-export">↓ EXPORTAR</button>
+  </div>
+</header>
+
+<div class="app-body">
+
+  <!-- COLUMNA 1: MAPA -->
+  <div class="map-wrap">
+    <div id="map"></div>
+
+    <div id="loading" class="loading-overlay">
+      <div class="spinner"></div>
+      <div class="loading-text">CARGANDO CAPAS...</div>
+    </div>
+
+    <div id="error-box" class="error-box">
+      <h3>ERROR AL CARGAR CAPAS</h3>
+      <p>Este visor necesita ser servido desde un servidor local.<br>El acceso directo (file://) bloquea la carga de archivos.</p>
+      <code>python3 -m http.server 8080</code>
+      <p>Luego abrí <strong>http://localhost:8080</strong> en el navegador.</p>
+    </div>
+
+    <div class="layer-control" id="layer-control" style="display:none">
+      <div class="lc-title">— CAPAS</div>
+      <div id="layer-rows"></div>
+      <div class="lc-divider"></div>
+      <div class="lc-section">MAPA BASE</div>
+      <label class="lc-row"><input type="radio" name="base" value="carto" checked> CARTO DARK</label>
+      <label class="lc-row"><input type="radio" name="base" value="osm"> OPENSTREETMAP</label>
+      <label class="lc-row"><input type="radio" name="base" value="esri"> ESRI IMAGERY</label>
+    </div>
+
+    <div class="legend" id="legend" style="display:none">
+      <strong>LEYENDA</strong>
+      <div id="legend-rows"></div>
+    </div>
+  </div>
+
+  <!-- COLUMNA 2: INFO -->
+  <div class="info-panel">
+    <div class="panel-header">
+      <div class="ph-tag" id="ph-tag">VISOR</div>
+      <h2 id="ph-title">FIND LANDING</h2>
+      <div class="ph-sub" id="ph-sub">SELECCIONÁ UN ELEMENTO EN EL MAPA</div>
+    </div>
+    <div class="panel-body" id="panel-body">
+      <div class="empty-state">
+        <div class="empty-icon">◎</div>
+        <p>HACÉ CLIC SOBRE UN ELEMENTO<br>DEL MAPA PARA VER SUS DATOS</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- COLUMNA 3: NOTAS -->
+  <div class="notas-panel">
+    <div class="notas-header">
+      <div>
+        <h3>NOTAS</h3>
+        <div class="nh-sub">POR FEATURE · PERSISTENTES</div>
+      </div>
+      <div class="notas-status" id="notas-status">
+        <span class="dot"></span>
+        <span id="notas-status-txt">SIN SELECCIÓN</span>
+      </div>
+    </div>
+    <div class="notas-body" id="notas-body">
+      <div class="notas-empty">
+        <p>SELECCIONÁ UN ELEMENTO EN EL MAPA PARA AGREGAR NOTAS</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /.app-body -->
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'endo_findlanding_v1';
+
+const TILE = {
+  carto: L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution:'© CartoDB', maxZoom:19 }),
+  osm:   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',            { attribution:'© OpenStreetMap', maxZoom:19 }),
+  esri:  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution:'© Esri', maxZoom:18 }),
+};
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+const S = {
+  capas:      [],
+  geojson:    null,
+  map:        null,
+  baseKey:    'carto',
+  layers:     {},   // capaId → L.geoJSON
+  layerState: {},   // capaId → { visible, opacity }
+  selected:   null, // { fk, feature, lLayer, capaId }
+  edits:      {},   // fk → { [field]: value, notas: '' }
+  title:      'FIND LANDING · VISOR TERRITORIAL',
+  subtitle:   'LOTES · SECTORES · CORREDORES · ZONIFICACIÓN',
+};
+
+// ── PERSISTENCE ──────────────────────────────────────────────────────────────
+function loadSaved() {
+  try {
+    const d = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    if (d.edits)      S.edits      = d.edits;
+    if (d.layerState) Object.assign(S.layerState, d.layerState);
+    if (d.title)      S.title      = d.title;
+    if (d.subtitle)   S.subtitle   = d.subtitle;
+  } catch(e) {}
+}
+function persist() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      edits: S.edits, layerState: S.layerState,
+      title: S.title, subtitle: S.subtitle,
+    }));
+  } catch(e) {}
+}
+
+// ── HELPERS ──────────────────────────────────────────────────────────────────
+const fk  = f => `${f.properties._folder}::${fname(f)}`;
+const fname = f => f.properties.name || f.properties.nombre || f.properties.Nombre || '(SIN NOMBRE)';
+const fdesc = f => f.properties.description || f.properties.Descripción || f.properties.descripción || '';
+const getCapa = id => S.capas.find(c => c.id === id);
+const featOfCapa = id => {
+  const c = getCapa(id);
+  return c ? S.geojson.features.filter(f => f.properties._folder === c.nombre) : [];
+};
+function getEdit(key, field, fallback = '') {
+  return S.edits[key]?.[field] ?? fallback;
+}
+function setEdit(key, field, val) {
+  if (!S.edits[key]) S.edits[key] = {};
+  S.edits[key][field] = val;
+  persist();
+}
+
+// ── MAP ──────────────────────────────────────────────────────────────────────
+function initMap() {
+  S.map = L.map('map', { center:[-26.797,-65.293], zoom:14, minZoom:10, maxZoom:19 });
+  TILE.carto.addTo(S.map);
+  S.map.on('click', () => { deselect(); showEmpty(); showNotasEmpty(); });
+}
+
+// ── STYLES ───────────────────────────────────────────────────────────────────
+function style(capa, sel = false) {
+  const op = S.layerState[capa.id]?.opacity ?? capa.opacidad ?? 0.6;
+  const geom = capa.geometrias || [];
+  const isLine  = geom.includes('LineString') && !geom.includes('Polygon');
+  const isPoint = geom.includes('Point');
+  if (isLine)  return { color: sel ? '#c9a84c' : capa.color, weight: sel ? 4 : 2,   opacity: op };
+  if (isPoint) return { color: capa.color, fillColor: capa.color, fillOpacity: op, weight: 2, radius: 8 };
+  return { color: sel ? '#c9a84c' : capa.color, weight: sel ? 2.5 : 1.5, fillColor: capa.color, fillOpacity: op * 0.4, opacity: op };
+}
+
+// ── LAYERS ───────────────────────────────────────────────────────────────────
+function renderLayers() {
+  S.capas.forEach(capa => {
+    const feats = featOfCapa(capa.id);
+    if (!feats.length) return;
+    const layer = L.geoJSON({ type:'FeatureCollection', features: feats }, {
+      style: () => style(capa),
+      pointToLayer: (f, ll) => L.circleMarker(ll, { ...style(capa), radius: 8 }),
+      onEachFeature: (feature, lyr) => {
+        lyr.bindTooltip(fname(feature), { sticky:true, direction:'top' });
+        lyr.on('click', e => { L.DomEvent.stopPropagation(e); selectFeat(feature, lyr, capa.id); });
+        lyr.on('mouseover', () => { if (S.selected?.fk !== fk(feature)) applyStyle(lyr, feature, capa, true); });
+        lyr.on('mouseout',  () => { if (S.selected?.fk !== fk(feature)) applyStyle(lyr, feature, capa, false); });
+      },
+    });
+    if (S.layerState[capa.id]?.visible !== false) layer.addTo(S.map);
+    S.layers[capa.id] = layer;
+  });
+
+  const bounds = Object.values(S.layers).map(l => l.getBounds()).filter(b => b.isValid());
+  if (bounds.length) S.map.fitBounds(bounds.reduce((a, b) => a.extend(b)), { padding:[24,24] });
+}
+
+function applyStyle(lyr, feature, capa, hover) {
+  const s = hover ? { ...style(capa), color:'#c9a84c', weight: (capa.geometrias||[]).includes('LineString') ? 3 : 2 } : style(capa);
+  lyr.setStyle ? lyr.setStyle(s) : null;
+}
+
+function updateCapa(capaId) {
+  const capa = getCapa(capaId);
+  if (!capa || !S.layers[capaId]) return;
+  S.layers[capaId].setStyle(style(capa));
+}
+
+// ── SELECTION ─────────────────────────────────────────────────────────────────
+function deselect() {
+  if (!S.selected) return;
+  const { lLayer, capaId } = S.selected;
+  const capa = getCapa(capaId);
+  if (capa && lLayer) lLayer.setStyle(style(capa));
+  S.selected = null;
+}
+
+function selectFeat(feature, lLayer, capaId) {
+  deselect();
+  const capa = getCapa(capaId);
+  lLayer.setStyle(style(capa, true));
+  if (lLayer.bringToFront) lLayer.bringToFront();
+  S.selected = { fk: fk(feature), feature, lLayer, capaId };
+  showFeature(feature, capa);
+  showNotas(feature);
+}
+
+// ── INFO PANEL ────────────────────────────────────────────────────────────────
+function showEmpty() {
+  document.getElementById('ph-tag').textContent   = 'VISOR';
+  document.getElementById('ph-title').textContent = 'FIND LANDING';
+  document.getElementById('ph-sub').textContent   = 'SELECCIONÁ UN ELEMENTO EN EL MAPA';
+  document.getElementById('panel-body').innerHTML = `
+    <div class="empty-state">
+      <div class="empty-icon">◎</div>
+      <p>HACÉ CLIC SOBRE UN ELEMENTO<br>DEL MAPA PARA VER SUS DATOS</p>
+    </div>`;
+}
+
+function showFeature(feature, capa) {
+  const key  = fk(feature);
+  const name = getEdit(key, 'name', fname(feature));
+  const desc = getEdit(key, 'description', fdesc(feature));
+  const p    = feature.properties;
+
+  document.getElementById('ph-tag').textContent   = capa.nombre;
+  document.getElementById('ph-title').textContent = name;
+  document.getElementById('ph-sub').textContent   = capa.descripcion || capa.nombre;
+
+  const SKIP = new Set(['name','nombre','Nombre','description','Descripción','descripción','_folder']);
+  const extras = Object.entries(p).filter(([k]) => !SKIP.has(k) && p[k]);
+
+  document.getElementById('panel-body').innerHTML = `
+    <div class="feat-header" style="background:${capa.color}18;border-left-color:${capa.color}">
+      <h3 style="color:${capa.color}">${esc(name)}</h3>
+      <div class="feat-sub">${capa.nombre} · ${feature.geometry.type.toUpperCase()}</div>
+    </div>
+    ${fieldBlock(key,'name','NOMBRE',name,'input')}
+    ${fieldBlock(key,'description','DESCRIPCIÓN',desc,'textarea')}
+    ${extras.length ? `
+      <div class="prop-table">
+        ${extras.map(([k,v]) => `
+          <div class="prop-row">
+            <div class="prop-key">${esc(k.toUpperCase())}</div>
+            <div class="prop-val">${esc(String(v))}</div>
+          </div>`).join('')}
+      </div>` : ''}`;
+}
+
+function fieldBlock(key, field, label, val, type) {
+  const empty = !val;
+  return `
+    <div class="field" data-fk="${esc(key)}" data-field="${field}">
+      <div class="field-header">
+        <div class="field-label">${label}</div>
+        <button class="btn-edit" onclick="toggleField(this)">EDITAR</button>
+      </div>
+      <div class="field-content${empty?' vacio':''}">${esc(val) || '—'}</div>
+      ${type==='textarea'
+        ? `<textarea class="field-input" rows="3">${esc(val)}</textarea>`
+        : `<input class="field-input" type="text" value="${esc(val)}">`}
+    </div>`;
+}
+
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+function toggleField(btn) {
+  const el    = btn.closest('.field');
+  const disp  = el.querySelector('.field-content');
+  const inp   = el.querySelector('.field-input');
+  const key   = el.dataset.fk;
+  const field = el.dataset.field;
+
+  if (btn.classList.contains('guardar')) {
+    const v = inp.value.trim();
+    disp.textContent = v || '—';
+    disp.classList.toggle('vacio', !v);
+    inp.style.display = 'none';
+    disp.style.display = '';
+    btn.textContent = 'EDITAR';
+    btn.classList.remove('guardar');
+    setEdit(key, field, v);
+    if (field === 'name') document.getElementById('ph-title').textContent = v;
+  } else {
+    inp.style.display = '';
+    disp.style.display = 'none';
+    inp.focus();
+    btn.textContent = 'GUARDAR';
+    btn.classList.add('guardar');
+    inp.addEventListener('keydown', e => { if (e.key==='Enter' && inp.tagName==='INPUT') toggleField(btn); }, { once:true });
+  }
+}
+
+// ── NOTES ────────────────────────────────────────────────────────────────────
+function showNotasEmpty() {
+  document.getElementById('notas-body').innerHTML = `
+    <div class="notas-empty">
+      <p>SELECCIONÁ UN ELEMENTO EN EL MAPA PARA AGREGAR NOTAS</p>
+    </div>`;
+  setStatus('','SIN SELECCIÓN');
+}
+
+function showNotas(feature) {
+  const key   = fk(feature);
+  const name  = fname(feature);
+  const notas = getEdit(key, 'notas', '');
+
+  document.getElementById('notas-body').innerHTML = `
+    <div class="notas-target">
+      <div class="nat-label">ELEMENTO SELECCIONADO</div>
+      <div class="nat-value">${esc(name)}</div>
+    </div>
+    <textarea class="notas-ta" id="notas-ta" placeholder="ESCRIBÍ TUS NOTAS ACÁ...">${esc(notas)}</textarea>
+    <div class="notas-footer">
+      <button class="btn-action" id="btn-cancel">CANCELAR</button>
+      <button class="btn-action primary" id="btn-save">GUARDAR</button>
+    </div>`;
+
+  setStatus('','LISTO');
+
+  document.getElementById('notas-ta').addEventListener('input', () => setStatus('editing','EDITANDO...'));
+
+  document.getElementById('btn-save').onclick = () => {
+    const v = document.getElementById('notas-ta').value;
+    setEdit(key, 'notas', v);
+    setStatus('saved','GUARDADO');
+    setTimeout(() => setStatus('','LISTO'), 2000);
+  };
+
+  document.getElementById('btn-cancel').onclick = () => {
+    document.getElementById('notas-ta').value = getEdit(key, 'notas', '');
+    setStatus('','LISTO');
+  };
+}
+
+function setStatus(cls, txt) {
+  const el = document.getElementById('notas-status');
+  el.className = `notas-status ${cls}`;
+  document.getElementById('notas-status-txt').textContent = txt;
+}
+
+// ── LAYER CONTROL ────────────────────────────────────────────────────────────
+function buildLayerControl() {
+  const rows = document.getElementById('layer-rows');
+  rows.innerHTML = '';
+
+  S.capas.forEach(capa => {
+    const vis = S.layerState[capa.id]?.visible !== false;
+    const op  = Math.round((S.layerState[capa.id]?.opacity ?? capa.opacidad ?? 0.6) * 100);
+    const opId = `op-${capa.id}`;
+
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `
+      <label class="lc-row">
+        <input type="checkbox" data-id="${capa.id}" ${vis?'checked':''}>
+        <span class="lc-dot" style="background:${capa.color}"></span>
+        <span>${capa.nombre}</span>
+      </label>
+      <div class="lc-opacity">
+        <span>OPACIDAD</span>
+        <input type="range" id="${opId}" min="0" max="100" value="${op}" data-id="${capa.id}">
+        <span class="lc-val" id="${opId}-v">${op}%</span>
+      </div>`;
+    rows.appendChild(wrap);
+  });
+
+  rows.querySelectorAll('input[type=checkbox]').forEach(chk => {
+    chk.addEventListener('change', () => {
+      const id = chk.dataset.id;
+      if (!S.layerState[id]) S.layerState[id] = {};
+      S.layerState[id].visible = chk.checked;
+      persist();
+      if (S.layers[id]) chk.checked ? S.layers[id].addTo(S.map) : S.map.removeLayer(S.layers[id]);
+    });
+  });
+
+  rows.querySelectorAll('input[type=range]').forEach(rng => {
+    rng.addEventListener('input', () => {
+      const id  = rng.dataset.id;
+      const val = parseInt(rng.value);
+      document.getElementById(`op-${id}-v`).textContent = val + '%';
+      if (!S.layerState[id]) S.layerState[id] = {};
+      S.layerState[id].opacity = val / 100;
+      persist();
+      updateCapa(id);
+    });
+  });
+
+  document.querySelectorAll('input[name=base]').forEach(r => {
+    r.addEventListener('change', () => {
+      if (!r.checked) return;
+      S.map.removeLayer(TILE[S.baseKey]);
+      S.baseKey = r.value;
+      TILE[r.value].addTo(S.map);
+    });
+  });
+
+  document.getElementById('layer-control').style.display = '';
+}
+
+// ── LEGEND ───────────────────────────────────────────────────────────────────
+function buildLegend() {
+  const rows = document.getElementById('legend-rows');
+  S.capas.forEach(c => {
+    const row = document.createElement('div');
+    row.className = 'legend-row';
+    row.innerHTML = `<div class="legend-sw" style="background:${c.color}"></div><span>${c.nombre}</span>`;
+    rows.appendChild(row);
+  });
+  document.getElementById('legend').style.display = '';
+}
+
+// ── EXPORT ───────────────────────────────────────────────────────────────────
+function exportData() {
+  const payload = {
+    exportadoEn: new Date().toISOString(),
+    proyecto: document.getElementById('hdr-title').textContent.trim(),
+    totalFeatures: S.geojson?.features?.length ?? 0,
+    capas: S.capas.map(c => ({
+      ...c,
+      visible_actual: S.layerState[c.id]?.visible !== false,
+      opacidad_actual: S.layerState[c.id]?.opacity ?? c.opacidad,
+    })),
+    edits: S.edits,
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = Object.assign(document.createElement('a'), { href:url, download:`endo-findlanding-${Date.now()}.json` });
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// ── HEADER EDITABLE ──────────────────────────────────────────────────────────
+function initHeader() {
+  const t  = document.getElementById('hdr-title');
+  const st = document.getElementById('hdr-sub');
+  t.textContent  = S.title;
+  st.textContent = S.subtitle;
+  t.addEventListener('blur',  () => { S.title    = t.textContent.trim();  persist(); });
+  st.addEventListener('blur', () => { S.subtitle = st.textContent.trim(); persist(); });
+  [t, st].forEach(el => el.addEventListener('keydown', e => { if (e.key==='Enter') { e.preventDefault(); el.blur(); } }));
+}
+
+// ── BOOT ─────────────────────────────────────────────────────────────────────
+async function boot() {
+  loadSaved();
+  initHeader();
+
+  try {
+    const [rCap, rGeo] = await Promise.all([
+      fetch('data/capas.json'),
+      fetch('assets/geojson/capas-base.geojson'),
+    ]);
+    if (!rCap.ok || !rGeo.ok) throw new Error('fetch failed');
+
+    S.capas   = (await rCap.json()).capas;
+    S.geojson = await rGeo.json();
+
+    initMap();
+    buildLayerControl();
+    buildLegend();
+    renderLayers();
+    showEmpty();
+
+    document.getElementById('pill-feat').textContent = `${S.geojson.features.length} FEATURES`;
+    document.getElementById('pill-cap').textContent  = `${S.capas.length} CAPAS`;
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('btn-export').addEventListener('click', exportData);
+
+  } catch(err) {
+    console.error(err);
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('error-box').classList.add('show');
+  }
+}
+
+boot();
+</script>
+</body>
+</html>
