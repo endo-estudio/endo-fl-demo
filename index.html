@@ -510,16 +510,20 @@ function getFeatureColor(feature, capa) {
 
 function parseUrbanistic(desc) {
   const d = String(desc || '').replace(/<[^>]+>/g, ' ');
-  const get = (...rxs) => { for (const rx of rxs) { const m = d.match(rx); if (m) return m[1].trim(); } return null; };
+  const norm = s => s ? s.replace(/,/g, '.').trim() : null;
+  const get = (...rxs) => {
+    for (const rx of rxs) { const m = d.match(rx); if (m) return norm(m[1]); }
+    return null;
+  };
   return {
-    'SUP. LOTE':   get(/superficie[^:]*:\s*([0-9,.]+\s*m2?)/i, /([0-9,.]+)\s*m2/i),
-    'FOS':         get(/\bfos\b[^:]*:\s*([0-9.]+)/i),
-    'FOT':         get(/\bfot\b[^:]*:\s*([0-9.]+)/i),
-    'DENSIDAD':    get(/densidad[^:]*:\s*([0-9,.]+)/i),
-    'ALT. MÁX.':  get(/altura[^:]*:\s*([0-9,.]+\s*m?)/i),
-    'RET. FRENTE': get(/retiro\s+frente[^:]*:\s*([0-9,.]+)/i),
-    'RET. FONDO':  get(/retiro\s+fondo[^:]*:\s*([0-9,.]+)/i),
-    'M2 CONSTR.':  get(/construibles[^:]*:\s*([0-9,.]+)/i),
+    'SUP. LOTE':   get(/SUP\s*DE\s*LOTE\s*=\s*([\d.,]+)/i),
+    'FOS':         get(/\bFOS\s*=\s*([\d.,]+)/i),
+    'FOT':         get(/\bFOT\s*=\s*([\d.,]+)/i),
+    'DENSIDAD':    get(/DENSIDAD\s+([\d.,]+)/i),
+    'ALT. MÁX.':  get(/ALTURA\s+M[AÁ]XIM[AO]?\s*=\s*([\d.,]+)/i),
+    'RET. FRENTE': get(/RETIRO\s+FRENTE\s*=\s*([\d.,]+)/i),
+    'RET. FONDO':  get(/RETIRO\s+FONDO\s*=\s*([\d.,]+)/i),
+    'M2 CONSTR.':  get(/METROS\s+CONSTRUIBLES\s*=\s*([\d.,]+)/i),
   };
 }
 
