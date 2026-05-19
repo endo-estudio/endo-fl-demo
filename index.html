@@ -960,6 +960,25 @@ async function guardarAGitHub() {
   }
 }
 
+// ── CARGAR CAMBIOS DESDE GITHUB ───────────────────────────────────────────────
+async function cargarCambiosDesdeGitHub() {
+  try {
+    const url = 'https://raw.githubusercontent.com/endo-estudio/endo-fl-demo/main/data/cambios.json';
+    const res = await fetch(url);
+    if (!res.ok) return;
+    const cambios = await res.json();
+
+    if (cambios.edits)      Object.assign(S.edits,      cambios.edits);
+    if (cambios.layerState) Object.assign(S.layerState, cambios.layerState);
+    if (cambios.titulo)     S.title    = cambios.titulo;
+    if (cambios.subtitulo)  S.subtitle = cambios.subtitulo;
+
+    console.log('Cambios cargados desde GitHub —', cambios.timestamp ?? '');
+  } catch(e) {
+    console.log('Sin cambios en GitHub aún');
+  }
+}
+
 // ── BOOT ─────────────────────────────────────────────────────────────────────
 async function boot() {
   loadSaved();
@@ -972,6 +991,7 @@ async function boot() {
     if (!rCap.ok || !rGeo.ok) throw new Error('fetch failed');
     S.capas   = (await rCap.json()).capas;
     S.geojson = await rGeo.json();
+    await cargarCambiosDesdeGitHub();
     initMap();
     buildLayerControl();
     buildLegend();
