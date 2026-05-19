@@ -9,6 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="config.local.js"></script>
 <style>
 :root {
   --bg:      #1E1E1E;
@@ -72,6 +73,33 @@ input[type="text"],textarea { text-transform:uppercase; }
   transition:all 0.15s;
 }
 .btn-export:hover { background:rgba(201,168,76,0.2); border-color:var(--accent); }
+.btn-github {
+  font-family:'Poppins',sans-serif; font-size:9px; font-weight:700;
+  letter-spacing:2px; color:#10b981;
+  border:1px solid rgba(16,185,129,0.4); background:rgba(16,185,129,0.08);
+  padding:5px 14px; border-radius:20px; cursor:pointer; text-transform:uppercase;
+  transition:all 0.15s; display:none;
+}
+.btn-github:hover { background:rgba(16,185,129,0.18); border-color:#10b981; }
+.btn-github:disabled { opacity:0.5; cursor:not-allowed; }
+
+/* ── TOAST ─────────────────────────────────── */
+.toast {
+  position:fixed; bottom:24px; right:24px; z-index:9999;
+  font-family:'Poppins',sans-serif; font-size:10px; font-weight:700;
+  letter-spacing:2px; padding:12px 18px; border-radius:6px;
+  display:flex; align-items:center; gap:12px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.6);
+  animation:slideIn 0.2s ease;
+}
+@keyframes slideIn { from { transform:translateY(16px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+.toast-success { background:#064e3b; color:#10b981; border:1px solid rgba(16,185,129,0.3); }
+.toast-error   { background:#450a0a; color:#ef4444; border:1px solid rgba(239,68,68,0.3); }
+.toast button  {
+  background:transparent; border:none; color:inherit; cursor:pointer;
+  font-size:12px; line-height:1; padding:0; opacity:0.7;
+}
+.toast button:hover { opacity:1; }
 
 /* ── LAYOUT ─────────────────────────────────── */
 .app-body {
@@ -332,6 +360,7 @@ textarea.notas-ta::placeholder { color:var(--text-3); font-style:italic; }
   <div class="hdr-actions">
     <div class="meta-pill" id="pill-feat">— FEATURES</div>
     <div class="meta-pill" id="pill-cap">— CAPAS</div>
+    <button class="btn-github" id="btn-github">↑ GUARDAR EN GITHUB</button>
     <button class="btn-export" id="btn-export">↓ EXPORTAR</button>
   </div>
 </header>
@@ -843,6 +872,94 @@ function initHeader() {
   [t, st].forEach(el => el.addEventListener('keydown', e => { if (e.key==='Enter') { e.preventDefault(); el.blur(); } }));
 }
 
+// ── GITHUB SAVE ───────────────────────────────────────────────────────────────
+function showToast(msg, type) {
+  const old = document.getElementById('gh-toast');
+  if (old) old.remove();
+  const t = document.createElement('div');
+  t.id        = 'gh-toast';
+  t.className = `toast toast-${type}`;
+  t.innerHTML = `<span>${msg}</span>${type === 'error'
+    ? `<button onclick="document.getElementById('gh-toast').remove()">✕</button>` : ''}`;
+  document.body.appendChild(t);
+  if (type === 'success') setTimeout(() => t?.remove(), 3000);
+}
+
+async function guardarAGitHub() {
+  const token = (typeof GITHUB_TOKEN !== 'undefined') ? GITHUB_TOKEN : null;
+  const owner = (typeof GITHUB_OWNER !== 'undefined') ? GITHUB_OWNER : null;
+  const repo  = (typeof GITHUB_REPO  !== 'undefined') ? GITHUB_REPO  : null;
+  if (!token || !owner || !repo) return;
+
+  const btn = document.getElementById('btn-github');
+  const originalText = btn.textContent;
+  btn.textContent = '↻ GUARDANDO...';
+  btn.disabled = true;
+
+  const payload = {
+    timestamp: new Date().toISOString(),
+    titulo:    document.getElementById('hdr-title')?.textContent.trim() ?? '',
+    subtitulo: document.getElementById('hdr-sub')?.textContent.trim()   ?? '',
+    capas:      S.capas,
+    layerState: S.layerState,
+    edits:      S.edits,
+    totalFeatures: S.geojson?.features?.length ?? 0,
+  };
+
+  const path    = 'data/cambios.json';
+  const apiUrl  = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+  const headers = {
+    Authorization: `token ${token}`,
+    'Content-Type': 'application/json',
+    Accept: 'application/vnd.github.v3+json',
+  };
+
+  try {
+    // 1. Obtener SHA actual (si el archivo existe)
+    let sha;
+    const getRes = await fetch(apiUrl, { headers });
+    if (getRes.ok) {
+      sha = (await getRes.json()).sha;
+    } else if (getRes.status === 401) {
+      throw new Error('TOKEN INVÁLIDO · REVISAR config.local.js');
+    } else if (getRes.status !== 404) {
+      throw new Error(`Error al leer archivo: ${getRes.status}`);
+    }
+
+    // 2. Convertir contenido a base64 (compatible con caracteres UTF-8)
+    const json64 = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
+
+    // 3. PUT a la API de GitHub
+    const putRes = await fetch(apiUrl, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({
+        message: `Update: cambios guardados ${payload.timestamp}`,
+        content: json64,
+        ...(sha ? { sha } : {}),
+      }),
+    });
+
+    if (!putRes.ok) {
+      const err = await putRes.json().catch(() => ({}));
+      if (putRes.status === 401) throw new Error('TOKEN INVÁLIDO · REVISAR config.local.js');
+      if (putRes.status === 422) throw new Error('SHA INVÁLIDO · INTENTAR DE NUEVO');
+      throw new Error(err.message ?? `Error ${putRes.status}`);
+    }
+
+    showToast('✓ GUARDADO EN GITHUB', 'success');
+
+  } catch(e) {
+    const msg = (e instanceof TypeError)
+      ? 'ERROR DE CONEXIÓN · SIN INTERNET'
+      : e.message.toUpperCase();
+    showToast(msg, 'error');
+  } finally {
+    btn.textContent = originalText;
+    btn.disabled    = false;
+  }
+}
+
 // ── BOOT ─────────────────────────────────────────────────────────────────────
 async function boot() {
   loadSaved();
@@ -864,6 +981,12 @@ async function boot() {
     document.getElementById('pill-cap').textContent  = `${S.capas.length} CAPAS`;
     document.getElementById('loading').classList.add('hidden');
     document.getElementById('btn-export').addEventListener('click', exportData);
+    // Mostrar botón GitHub solo si config.local.js cargó el token
+    if (typeof GITHUB_TOKEN !== 'undefined' && GITHUB_TOKEN) {
+      const btnGh = document.getElementById('btn-github');
+      btnGh.style.display = '';
+      btnGh.addEventListener('click', guardarAGitHub);
+    }
   } catch(err) {
     console.error(err);
     document.getElementById('loading').classList.add('hidden');
