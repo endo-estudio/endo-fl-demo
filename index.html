@@ -243,32 +243,21 @@ input[type="text"],textarea { text-transform:uppercase; }
 
 /* fields */
 .field { margin-bottom:14px; }
-.field-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+.field-header { margin-bottom:6px; }
 .field-label { font-family:'Poppins',sans-serif; font-size:9px; font-weight:700; letter-spacing:2.5px; color:var(--text-3); }
-.btn-edit {
-  background:transparent; border:1px solid var(--borde-2); color:var(--text-2);
-  font-family:'Poppins',sans-serif; font-size:9px; font-weight:600; letter-spacing:1.5px;
-  padding:3px 10px; border-radius:3px; cursor:pointer; text-transform:uppercase; transition:all 0.15s;
-}
-.btn-edit:hover { background:var(--bg-4); color:var(--text); border-color:var(--text-3); }
-.btn-edit.guardar { background:var(--text); color:var(--bg); border-color:var(--text); }
-.btn-edit.guardar:hover { background:#fff; }
 
 .field-content {
   background:var(--bg-3); border:1px solid var(--borde); border-radius:4px;
   padding:11px 13px; font-size:11px; color:var(--text);
   line-height:1.7; white-space:pre-wrap; letter-spacing:0.3px;
-  font-weight:500; min-height:36px;
+  font-weight:500; min-height:36px; cursor:text; outline:none;
+  transition:border-color 0.15s;
 }
+.field-content:hover { border-color:var(--borde-2); }
+.field-content:focus { border-color:#c9a84c; border-style:dashed; color:var(--text); }
 .field-content.vacio { color:var(--text-3); font-style:italic; }
-textarea.field-input,input.field-input {
-  display:none; width:100%; background:var(--bg); border:1px solid var(--borde-2);
-  border-radius:4px; padding:11px 13px; font-size:11px; color:var(--text);
-  line-height:1.7; letter-spacing:0.3px; outline:none; resize:vertical;
-  text-transform:uppercase;
-}
-textarea.field-input { min-height:80px; }
-textarea.field-input:focus,input.field-input:focus { border-color:var(--text); }
+.field-content.vacio:focus { color:var(--text); font-style:normal; }
+.field-content[data-type="textarea"] { min-height:80px; }
 
 .feat-header {
   border-radius:4px; padding:14px 16px; margin-bottom:14px; border-left:4px solid;
@@ -1051,16 +1040,16 @@ function openColorPicker(key, swId) {
 
 function fieldBlock(key, field, label, val, type) {
   const empty = !val;
+  const content = empty ? '—' : esc(val);
   return `
     <div class="field" data-fk="${esc(key)}" data-field="${field}">
-      <div class="field-header">
-        <div class="field-label">${label}</div>
-        <button class="btn-edit" onclick="toggleField(this)">EDITAR</button>
-      </div>
-      <div class="field-content${empty?' vacio':''}">${esc(val) || '—'}</div>
-      ${type==='textarea'
-        ? `<textarea class="field-input" rows="3">${esc(val)}</textarea>`
-        : `<input class="field-input" type="text" value="${esc(val)}">`}
+      <div class="field-header"><div class="field-label">${label}</div></div>
+      <div class="field-content${empty?' vacio':''}" data-type="${type}"
+           contenteditable="true" spellcheck="false"
+           data-empty="${empty?'1':'0'}"
+           onfocus="onFieldFocus(this)"
+           onblur="onFieldBlur(this)"
+           onkeydown="onFieldKey(event,this)">${content}</div>
     </div>`;
 }
 
@@ -1068,30 +1057,35 @@ function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-function toggleField(btn) {
-  const el    = btn.closest('.field');
-  const disp  = el.querySelector('.field-content');
-  const inp   = el.querySelector('.field-input');
-  const key   = el.dataset.fk;
-  const field = el.dataset.field;
-  if (btn.classList.contains('guardar')) {
-    const v = inp.value.trim();
-    disp.textContent = v || '—';
-    disp.classList.toggle('vacio', !v);
-    inp.style.display = 'none';
-    disp.style.display = '';
-    btn.textContent = 'EDITAR';
-    btn.classList.remove('guardar');
+function onFieldFocus(el) {
+  if (el.dataset.empty === '1') {
+    el.textContent = '';
+    el.classList.remove('vacio');
+    el.dataset.empty = '0';
+  }
+}
+
+function onFieldBlur(el) {
+  const container = el.closest('.field');
+  const key   = container.dataset.fk;
+  const field = container.dataset.field;
+  const v = el.innerText.trim();
+  if (!v) {
+    el.textContent = '—';
+    el.classList.add('vacio');
+    el.dataset.empty = '1';
+    setEdit(key, field, '');
+  } else {
+    el.dataset.empty = '0';
+    el.classList.remove('vacio');
     setEdit(key, field, v);
     if (field === 'name') document.getElementById('ph-title').textContent = v;
-  } else {
-    inp.style.display = '';
-    disp.style.display = 'none';
-    inp.focus();
-    btn.textContent = 'GUARDAR';
-    btn.classList.add('guardar');
-    inp.addEventListener('keydown', e => { if (e.key==='Enter' && inp.tagName==='INPUT') toggleField(btn); }, { once:true });
   }
+}
+
+function onFieldKey(e, el) {
+  if (e.key === 'Escape') { el.blur(); e.preventDefault(); }
+  if (e.key === 'Enter' && el.dataset.type !== 'textarea') { el.blur(); e.preventDefault(); }
 }
 
 // ── NOTES ────────────────────────────────────────────────────────────────────
