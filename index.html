@@ -75,16 +75,9 @@ input[type="text"],textarea { text-transform:uppercase; }
 
 /* ── LAYOUT ─────────────────────────────────── */
 .app-body {
-  display:grid; grid-template-columns:1fr 4px 380px 4px 320px;
+  display:grid; grid-template-columns:1fr 380px 320px;
   height:calc(100vh - 62px);
 }
-
-/* ── RESIZERS ─────────────────────────────────── */
-.col-resizer {
-  width:4px; cursor:col-resize; background:var(--borde);
-  transition:background 0.15s; z-index:10; user-select:none;
-}
-.col-resizer:hover,.col-resizer.active { background:var(--accent); }
 
 /* ── COLOR PICKER ─────────────────────────────── */
 .btn-color {
@@ -307,17 +300,15 @@ textarea.notas-ta::placeholder { color:var(--text-3); font-style:italic; }
 .leaflet-bar a { background:var(--bg-3) !important; color:var(--text) !important; border-color:var(--borde) !important; }
 .leaflet-bar a:hover { background:var(--bg-4) !important; }
 
-@media (max-width:1280px) { .app-body { grid-template-columns:1fr 4px 340px 4px 280px; } }
+@media (max-width:1280px) { .app-body { grid-template-columns:1fr 340px 280px; } }
 @media (max-width:1080px) {
   .app-body { grid-template-columns:1fr 320px; grid-template-rows:65vh auto; }
   .notas-panel { grid-column:1/-1; border-left:none; border-top:1px solid var(--borde); max-height:50vh; }
-  .col-resizer { display:none; }
 }
 @media (max-width:720px) {
   .app-body { grid-template-columns:1fr; }
   .info-panel,.notas-panel { border-left:none; border-top:1px solid var(--borde); }
   .hdr-actions { display:none; }
-  .col-resizer { display:none; }
 }
 </style>
 </head>
@@ -378,7 +369,6 @@ textarea.notas-ta::placeholder { color:var(--text-3); font-style:italic; }
       <div id="legend-rows"></div>
     </div>
   </div>
-  <div class="col-resizer" id="resizer-1"></div>
 
   <!-- COLUMNA 2: INFO -->
   <div class="info-panel">
@@ -394,7 +384,6 @@ textarea.notas-ta::placeholder { color:var(--text-3); font-style:italic; }
       </div>
     </div>
   </div>
-  <div class="col-resizer" id="resizer-2"></div>
 
   <!-- COLUMNA 3: NOTAS -->
   <div class="notas-panel">
@@ -420,7 +409,6 @@ textarea.notas-ta::placeholder { color:var(--text-3); font-style:italic; }
 <script>
 // ── CONFIG ────────────────────────────────────────────────────────────────────
 const STORAGE_KEY = 'endo_findlanding_v1';
-const COLS_KEY    = 'endo_cols_v1';
 
 const TILE = {
   carto: L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution:'© CartoDB', maxZoom:19 }),
@@ -855,46 +843,6 @@ function initHeader() {
   [t, st].forEach(el => el.addEventListener('keydown', e => { if (e.key==='Enter') { e.preventDefault(); el.blur(); } }));
 }
 
-// ── RESIZABLE COLUMNS ─────────────────────────────────────────────────────────
-function initResizers() {
-  const body  = document.getElementById('app-body');
-  const saved = localStorage.getItem(COLS_KEY);
-  if (saved) body.style.gridTemplateColumns = saved;
-
-  function makeResizer(id, colIdx) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.addEventListener('mousedown', e => {
-      e.preventDefault();
-      el.classList.add('active');
-      const startX = e.clientX;
-      const cols   = getComputedStyle(body).gridTemplateColumns.split(' ').map(parseFloat);
-      function onMove(ev) {
-        const dx = ev.clientX - startX;
-        if (colIdx === 0) {
-          cols[0] = Math.max(280, cols[0] + dx);
-          cols[2] = Math.max(240, cols[2] - dx);
-        } else {
-          cols[2] = Math.max(240, cols[2] + dx);
-          cols[4] = Math.max(200, cols[4] - dx);
-        }
-        body.style.gridTemplateColumns = `${cols[0]}px 4px ${cols[2]}px 4px ${cols[4]}px`;
-        S.map?.invalidateSize();
-      }
-      function onUp() {
-        el.classList.remove('active');
-        localStorage.setItem(COLS_KEY, body.style.gridTemplateColumns);
-        document.removeEventListener('mousemove', onMove);
-        document.removeEventListener('mouseup', onUp);
-      }
-      document.addEventListener('mousemove', onMove);
-      document.addEventListener('mouseup', onUp);
-    });
-  }
-  makeResizer('resizer-1', 0);
-  makeResizer('resizer-2', 1);
-}
-
 // ── BOOT ─────────────────────────────────────────────────────────────────────
 async function boot() {
   loadSaved();
@@ -912,7 +860,6 @@ async function boot() {
     buildLegend();
     renderLayers();
     showEmpty();
-    initResizers();
     document.getElementById('pill-feat').textContent = `${S.geojson.features.length} FEATURES`;
     document.getElementById('pill-cap').textContent  = `${S.capas.length} CAPAS`;
     document.getElementById('loading').classList.add('hidden');
