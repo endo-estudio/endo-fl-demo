@@ -835,8 +835,15 @@ function renderLayers() {
     if (S.layerState[capa.id]?.visible !== false) layer.addTo(S.map);
     S.layers[capa.id] = layer;
   });
+  reorderLayers();
   const bounds = Object.values(S.layers).map(l => l.getBounds()).filter(b => b.isValid());
   if (bounds.length) S.map.fitBounds(bounds.reduce((a, b) => a.extend(b)), { padding:[24,24] });
+}
+
+function reorderLayers() {
+  ['zonas','zona_completamiento','cou','vias','precio_zonas'].forEach(id => {
+    if (S.layers[id] && S.map.hasLayer(S.layers[id])) S.layers[id].bringToFront();
+  });
 }
 
 function updateCapa(capaId) {
@@ -1080,7 +1087,7 @@ function buildLayerControl() {
       if (!S.layerState[id]) S.layerState[id] = {};
       S.layerState[id].visible = chk.checked;
       persist();
-      if (S.layers[id]) chk.checked ? S.layers[id].addTo(S.map) : S.map.removeLayer(S.layers[id]);
+      if (S.layers[id]) { if (chk.checked) { S.layers[id].addTo(S.map); reorderLayers(); } else S.map.removeLayer(S.layers[id]); }
     });
   });
   rows.querySelectorAll('input[type=range]').forEach(rng => {
