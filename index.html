@@ -75,9 +75,36 @@ input[type="text"],textarea { text-transform:uppercase; }
 
 /* ── LAYOUT ─────────────────────────────────── */
 .app-body {
-  display:grid; grid-template-columns:1fr 380px 320px;
+  display:grid; grid-template-columns:1fr 4px 380px 4px 320px;
   height:calc(100vh - 62px);
 }
+
+/* ── RESIZERS ─────────────────────────────────── */
+.col-resizer {
+  width:4px; cursor:col-resize; background:var(--borde);
+  transition:background 0.15s; z-index:10; user-select:none;
+}
+.col-resizer:hover,.col-resizer.active { background:var(--accent); }
+
+/* ── COLOR PICKER ─────────────────────────────── */
+.btn-color {
+  background:transparent; border:1px solid var(--borde-2); color:var(--text-2);
+  font-family:'Poppins',sans-serif; font-size:9px; font-weight:600; letter-spacing:1.5px;
+  padding:3px 10px; border-radius:3px; cursor:pointer; text-transform:uppercase;
+  display:inline-flex; align-items:center; gap:6px; transition:all 0.15s;
+}
+.btn-color:hover { background:var(--bg-4); color:var(--text); }
+.color-swatch { width:12px; height:12px; border-radius:2px; flex-shrink:0; border:1px solid rgba(255,255,255,0.2); }
+
+/* ── URBANISTIC GRID ──────────────────────────── */
+.urb-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:14px; }
+.urb-item {
+  background:var(--bg-3); border:1px solid var(--borde);
+  border-radius:4px; padding:8px 10px; cursor:pointer; transition:border-color 0.15s;
+}
+.urb-item:hover { border-color:var(--borde-2); }
+.urb-label { font-family:'Poppins',sans-serif; font-size:8.5px; font-weight:700; letter-spacing:1.5px; color:var(--text-3); margin-bottom:3px; }
+.urb-value { font-size:11px; color:var(--text); font-weight:600; }
 
 /* ── MAP ─────────────────────────────────────── */
 .map-wrap { position:relative; background:var(--bg-2); }
@@ -280,15 +307,17 @@ textarea.notas-ta::placeholder { color:var(--text-3); font-style:italic; }
 .leaflet-bar a { background:var(--bg-3) !important; color:var(--text) !important; border-color:var(--borde) !important; }
 .leaflet-bar a:hover { background:var(--bg-4) !important; }
 
-@media (max-width:1280px) { .app-body { grid-template-columns:1fr 340px 280px; } }
+@media (max-width:1280px) { .app-body { grid-template-columns:1fr 4px 340px 4px 280px; } }
 @media (max-width:1080px) {
   .app-body { grid-template-columns:1fr 320px; grid-template-rows:65vh auto; }
   .notas-panel { grid-column:1/-1; border-left:none; border-top:1px solid var(--borde); max-height:50vh; }
+  .col-resizer { display:none; }
 }
 @media (max-width:720px) {
   .app-body { grid-template-columns:1fr; }
   .info-panel,.notas-panel { border-left:none; border-top:1px solid var(--borde); }
   .hdr-actions { display:none; }
+  .col-resizer { display:none; }
 }
 </style>
 </head>
@@ -316,7 +345,7 @@ textarea.notas-ta::placeholder { color:var(--text-3); font-style:italic; }
   </div>
 </header>
 
-<div class="app-body">
+<div class="app-body" id="app-body">
 
   <!-- COLUMNA 1: MAPA -->
   <div class="map-wrap">
@@ -349,6 +378,7 @@ textarea.notas-ta::placeholder { color:var(--text-3); font-style:italic; }
       <div id="legend-rows"></div>
     </div>
   </div>
+  <div class="col-resizer" id="resizer-1"></div>
 
   <!-- COLUMNA 2: INFO -->
   <div class="info-panel">
@@ -364,6 +394,7 @@ textarea.notas-ta::placeholder { color:var(--text-3); font-style:italic; }
       </div>
     </div>
   </div>
+  <div class="col-resizer" id="resizer-2"></div>
 
   <!-- COLUMNA 3: NOTAS -->
   <div class="notas-panel">
@@ -389,6 +420,7 @@ textarea.notas-ta::placeholder { color:var(--text-3); font-style:italic; }
 <script>
 // ── CONFIG ────────────────────────────────────────────────────────────────────
 const STORAGE_KEY = 'endo_findlanding_v1';
+const COLS_KEY    = 'endo_cols_v1';
 
 const TILE = {
   carto: L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution:'© CartoDB', maxZoom:19 }),
@@ -396,16 +428,18 @@ const TILE = {
   esri:  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution:'© Esri', maxZoom:18 }),
 };
 
+const ZONE_COLORS = ['#10b981','#06b6d4','#f59e0b','#8b5cf6','#ef4444','#ec4899'];
+
 // ── STATE ────────────────────────────────────────────────────────────────────
 const S = {
   capas:      [],
   geojson:    null,
   map:        null,
   baseKey:    'carto',
-  layers:     {},   // capaId → L.geoJSON
-  layerState: {},   // capaId → { visible, opacity }
-  selected:   null, // { fk, feature, lLayer, capaId }
-  edits:      {},   // fk → { [field]: value, notas: '' }
+  layers:     {},
+  layerState: {},
+  selected:   null,
+  edits:      {},
   title:      'FIND LANDING · VISOR TERRITORIAL',
   subtitle:   'LOTES · SECTORES · CORREDORES · ZONIFICACIÓN',
 };
@@ -430,21 +464,46 @@ function persist() {
 }
 
 // ── HELPERS ──────────────────────────────────────────────────────────────────
-const fk  = f => `${f.properties._folder}::${fname(f)}`;
-const fname = f => f.properties.name || f.properties.nombre || f.properties.Nombre || '(SIN NOMBRE)';
-const fdesc = f => f.properties.description || f.properties.Descripción || f.properties.descripción || '';
+const fk     = f => `${f.properties._folder}::${fname(f)}`;
+const fname  = f => f.properties.name || f.properties.nombre || f.properties.Nombre || '(SIN NOMBRE)';
+const fdesc  = f => f.properties.description || f.properties.Descripción || f.properties.descripción || '';
 const getCapa = id => S.capas.find(c => c.id === id);
 const featOfCapa = id => {
   const c = getCapa(id);
-  return c ? S.geojson.features.filter(f => f.properties._folder === c.nombre) : [];
+  if (!c) return [];
+  const folder = c.folder || c.nombre;
+  return S.geojson.features.filter(f => f.properties._folder === folder);
 };
-function getEdit(key, field, fallback = '') {
-  return S.edits[key]?.[field] ?? fallback;
-}
+function getEdit(key, field, fallback = '') { return S.edits[key]?.[field] ?? fallback; }
 function setEdit(key, field, val) {
   if (!S.edits[key]) S.edits[key] = {};
   S.edits[key][field] = val;
   persist();
+}
+
+function getFeatureColor(feature, capa) {
+  if (capa.id === 'zonas') {
+    const saved = S.edits[fk(feature)]?.color;
+    if (saved) return saved;
+    const idx = featOfCapa(capa.id).findIndex(f => fk(f) === fk(feature));
+    return ZONE_COLORS[Math.max(0, idx) % ZONE_COLORS.length];
+  }
+  return capa.color;
+}
+
+function parseUrbanistic(desc) {
+  const d = String(desc || '').replace(/<[^>]+>/g, ' ');
+  const get = (...rxs) => { for (const rx of rxs) { const m = d.match(rx); if (m) return m[1].trim(); } return null; };
+  return {
+    'SUP. LOTE':   get(/superficie[^:]*:\s*([0-9,.]+\s*m2?)/i, /([0-9,.]+)\s*m2/i),
+    'FOS':         get(/\bfos\b[^:]*:\s*([0-9.]+)/i),
+    'FOT':         get(/\bfot\b[^:]*:\s*([0-9.]+)/i),
+    'DENSIDAD':    get(/densidad[^:]*:\s*([0-9,.]+)/i),
+    'ALT. MÁX.':  get(/altura[^:]*:\s*([0-9,.]+\s*m?)/i),
+    'RET. FRENTE': get(/retiro\s+frente[^:]*:\s*([0-9,.]+)/i),
+    'RET. FONDO':  get(/retiro\s+fondo[^:]*:\s*([0-9,.]+)/i),
+    'M2 CONSTR.':  get(/construibles[^:]*:\s*([0-9,.]+)/i),
+  };
 }
 
 // ── MAP ──────────────────────────────────────────────────────────────────────
@@ -455,63 +514,64 @@ function initMap() {
 }
 
 // ── STYLES ───────────────────────────────────────────────────────────────────
-function style(capa, sel = false) {
-  const op = S.layerState[capa.id]?.opacity ?? capa.opacidad ?? 0.6;
-  const geom = capa.geometrias || [];
+function style(capa, sel = false, feature = null) {
+  const op    = S.layerState[capa.id]?.opacity ?? capa.opacidad ?? 0.6;
+  const geom  = capa.geometrias || [];
   const isLine  = geom.includes('LineString') && !geom.includes('Polygon');
   const isPoint = geom.includes('Point');
-  if (isLine)  return { color: sel ? '#c9a84c' : capa.color, weight: sel ? 4 : 2,   opacity: op };
-  if (isPoint) return { color: capa.color, fillColor: capa.color, fillOpacity: op, weight: 2, radius: 8 };
-  return { color: sel ? '#c9a84c' : capa.color, weight: sel ? 2.5 : 1.5, fillColor: capa.color, fillOpacity: op * 0.4, opacity: op };
+  const color   = feature ? getFeatureColor(feature, capa) : capa.color;
+  if (isLine)  return { color: sel ? '#c9a84c' : color, weight: sel ? 4 : 2, opacity: op };
+  if (isPoint) return { color, fillColor: color, fillOpacity: op, weight: 2, radius: 8 };
+  return { color: sel ? '#c9a84c' : color, weight: sel ? 2.5 : 1.5, fillColor: color, fillOpacity: op * 0.4, opacity: op };
 }
 
 // ── LAYERS ───────────────────────────────────────────────────────────────────
 function renderLayers() {
   S.capas.forEach(capa => {
-    const feats = featOfCapa(capa.id);
+    const feats  = featOfCapa(capa.id);
     if (!feats.length) return;
-    const layer = L.geoJSON({ type:'FeatureCollection', features: feats }, {
-      style: () => style(capa),
-      pointToLayer: (f, ll) => L.circleMarker(ll, { ...style(capa), radius: 8 }),
+    const isLine = (capa.geometrias||[]).includes('LineString');
+    const layer  = L.geoJSON({ type:'FeatureCollection', features: feats }, {
+      style: (feature) => style(capa, false, feature),
+      pointToLayer: (f, ll) => L.circleMarker(ll, { ...style(capa, false, f), radius: 8 }),
       onEachFeature: (feature, lyr) => {
         lyr.bindTooltip(fname(feature), { sticky:true, direction:'top' });
         lyr.on('click', e => { L.DomEvent.stopPropagation(e); selectFeat(feature, lyr, capa.id); });
-        lyr.on('mouseover', () => { if (S.selected?.fk !== fk(feature)) applyStyle(lyr, feature, capa, true); });
-        lyr.on('mouseout',  () => { if (S.selected?.fk !== fk(feature)) applyStyle(lyr, feature, capa, false); });
+        lyr.on('mouseover', () => {
+          if (S.selected?.fk !== fk(feature))
+            lyr.setStyle({ ...style(capa, false, feature), color:'#c9a84c', weight: isLine ? 3 : 2 });
+        });
+        lyr.on('mouseout', () => {
+          if (S.selected?.fk !== fk(feature)) lyr.setStyle(style(capa, false, feature));
+        });
       },
     });
     if (S.layerState[capa.id]?.visible !== false) layer.addTo(S.map);
     S.layers[capa.id] = layer;
   });
-
   const bounds = Object.values(S.layers).map(l => l.getBounds()).filter(b => b.isValid());
   if (bounds.length) S.map.fitBounds(bounds.reduce((a, b) => a.extend(b)), { padding:[24,24] });
-}
-
-function applyStyle(lyr, feature, capa, hover) {
-  const s = hover ? { ...style(capa), color:'#c9a84c', weight: (capa.geometrias||[]).includes('LineString') ? 3 : 2 } : style(capa);
-  lyr.setStyle ? lyr.setStyle(s) : null;
 }
 
 function updateCapa(capaId) {
   const capa = getCapa(capaId);
   if (!capa || !S.layers[capaId]) return;
-  S.layers[capaId].setStyle(style(capa));
+  S.layers[capaId].setStyle(feature => style(capa, false, feature));
 }
 
 // ── SELECTION ─────────────────────────────────────────────────────────────────
 function deselect() {
   if (!S.selected) return;
-  const { lLayer, capaId } = S.selected;
+  const { lLayer, capaId, feature } = S.selected;
   const capa = getCapa(capaId);
-  if (capa && lLayer) lLayer.setStyle(style(capa));
+  if (capa && lLayer) lLayer.setStyle(style(capa, false, feature));
   S.selected = null;
 }
 
 function selectFeat(feature, lLayer, capaId) {
   deselect();
   const capa = getCapa(capaId);
-  lLayer.setStyle(style(capa, true));
+  lLayer.setStyle(style(capa, true, feature));
   if (lLayer.bringToFront) lLayer.bringToFront();
   S.selected = { fk: fk(feature), feature, lLayer, capaId };
   showFeature(feature, capa);
@@ -531,10 +591,11 @@ function showEmpty() {
 }
 
 function showFeature(feature, capa) {
-  const key  = fk(feature);
-  const name = getEdit(key, 'name', fname(feature));
-  const desc = getEdit(key, 'description', fdesc(feature));
-  const p    = feature.properties;
+  const key   = fk(feature);
+  const name  = getEdit(key, 'name', fname(feature));
+  const desc  = getEdit(key, 'description', fdesc(feature));
+  const color = getFeatureColor(feature, capa);
+  const p     = feature.properties;
 
   document.getElementById('ph-tag').textContent   = capa.nombre;
   document.getElementById('ph-title').textContent = name;
@@ -543,21 +604,80 @@ function showFeature(feature, capa) {
   const SKIP = new Set(['name','nombre','Nombre','description','Descripción','descripción','_folder']);
   const extras = Object.entries(p).filter(([k]) => !SKIP.has(k) && p[k]);
 
+  // Urbanistic fields for polygons
+  const isPoly = feature.geometry.type === 'Polygon' || feature.geometry.type === 'MultiPolygon';
+  let urbHtml = '';
+  if (isPoly) {
+    const parsed = parseUrbanistic(desc);
+    const items  = Object.entries(parsed).map(([label, parsedVal]) => {
+      const val = getEdit(key, `urb_${label}`, parsedVal || '');
+      return `<div class="urb-item" data-fk="${esc(key)}" data-ufield="urb_${label}" onclick="editUrb(this)">
+        <div class="urb-label">${label}</div>
+        <div class="urb-value">${esc(val) || '—'}</div>
+      </div>`;
+    }).join('');
+    urbHtml = `<div class="field-label" style="margin-bottom:8px">DATOS URBANÍSTICOS</div>
+      <div class="urb-grid">${items}</div>`;
+  }
+
+  // Zone color picker
+  const swId = `sw-${key.replace(/[^a-z0-9]/gi,'_')}`;
+  const colorHtml = capa.id === 'zonas' ? `
+    <div class="field" style="margin-bottom:14px">
+      <div class="field-header">
+        <div class="field-label">COLOR DE ZONA</div>
+        <button class="btn-color" onclick="openColorPicker('${esc(key)}','${swId}')">
+          <span class="color-swatch" id="${swId}" style="background:${color}"></span>
+          CAMBIAR COLOR
+        </button>
+      </div>
+      <input type="color" id="colorpk" value="${color}" style="display:none">
+    </div>` : '';
+
   document.getElementById('panel-body').innerHTML = `
-    <div class="feat-header" style="background:${capa.color}18;border-left-color:${capa.color}">
-      <h3 style="color:${capa.color}">${esc(name)}</h3>
+    <div class="feat-header" id="feat-hdr" style="background:${color}18;border-left-color:${color}">
+      <h3 style="color:${color}">${esc(name)}</h3>
       <div class="feat-sub">${capa.nombre} · ${feature.geometry.type.toUpperCase()}</div>
     </div>
+    ${colorHtml}
     ${fieldBlock(key,'name','NOMBRE',name,'input')}
     ${fieldBlock(key,'description','DESCRIPCIÓN',desc,'textarea')}
-    ${extras.length ? `
-      <div class="prop-table">
-        ${extras.map(([k,v]) => `
-          <div class="prop-row">
-            <div class="prop-key">${esc(k.toUpperCase())}</div>
-            <div class="prop-val">${esc(String(v))}</div>
-          </div>`).join('')}
-      </div>` : ''}`;
+    ${urbHtml}
+    ${extras.length ? `<div class="prop-table">${extras.map(([k,v]) =>
+      `<div class="prop-row">
+        <div class="prop-key">${esc(k.toUpperCase())}</div>
+        <div class="prop-val">${esc(String(v))}</div>
+      </div>`).join('')}</div>` : ''}`;
+}
+
+function editUrb(el) {
+  const key   = el.dataset.fk;
+  const field = el.dataset.ufield;
+  const label = el.querySelector('.urb-label').textContent;
+  const valEl = el.querySelector('.urb-value');
+  const cur   = getEdit(key, field, valEl.textContent === '—' ? '' : valEl.textContent);
+  const val   = prompt(`${label}:`, cur);
+  if (val === null) return;
+  setEdit(key, field, val.trim());
+  valEl.textContent = val.trim() || '—';
+}
+
+function openColorPicker(key, swId) {
+  const inp = document.getElementById('colorpk');
+  if (!inp) return;
+  inp.oninput = () => {
+    const color = inp.value;
+    setEdit(key, 'color', color);
+    const sw = document.getElementById(swId);
+    if (sw) sw.style.background = color;
+    const hdr = document.getElementById('feat-hdr');
+    if (hdr) { hdr.style.background = color + '18'; hdr.style.borderLeftColor = color; hdr.querySelector('h3').style.color = color; }
+    if (S.selected?.fk === key) {
+      const { feature, lLayer, capaId } = S.selected;
+      lLayer.setStyle(style(getCapa(capaId), true, feature));
+    }
+  };
+  inp.click();
 }
 
 function fieldBlock(key, field, label, val, type) {
@@ -576,9 +696,7 @@ function fieldBlock(key, field, label, val, type) {
 }
 
 function esc(s) {
-  return String(s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;');
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 function toggleField(btn) {
@@ -587,7 +705,6 @@ function toggleField(btn) {
   const inp   = el.querySelector('.field-input');
   const key   = el.dataset.fk;
   const field = el.dataset.field;
-
   if (btn.classList.contains('guardar')) {
     const v = inp.value.trim();
     disp.textContent = v || '—';
@@ -621,7 +738,6 @@ function showNotas(feature) {
   const key   = fk(feature);
   const name  = fname(feature);
   const notas = getEdit(key, 'notas', '');
-
   document.getElementById('notas-body').innerHTML = `
     <div class="notas-target">
       <div class="nat-label">ELEMENTO SELECCIONADO</div>
@@ -632,18 +748,13 @@ function showNotas(feature) {
       <button class="btn-action" id="btn-cancel">CANCELAR</button>
       <button class="btn-action primary" id="btn-save">GUARDAR</button>
     </div>`;
-
   setStatus('','LISTO');
-
   document.getElementById('notas-ta').addEventListener('input', () => setStatus('editing','EDITANDO...'));
-
   document.getElementById('btn-save').onclick = () => {
-    const v = document.getElementById('notas-ta').value;
-    setEdit(key, 'notas', v);
+    setEdit(key, 'notas', document.getElementById('notas-ta').value);
     setStatus('saved','GUARDADO');
     setTimeout(() => setStatus('','LISTO'), 2000);
   };
-
   document.getElementById('btn-cancel').onclick = () => {
     document.getElementById('notas-ta').value = getEdit(key, 'notas', '');
     setStatus('','LISTO');
@@ -651,8 +762,7 @@ function showNotas(feature) {
 }
 
 function setStatus(cls, txt) {
-  const el = document.getElementById('notas-status');
-  el.className = `notas-status ${cls}`;
+  document.getElementById('notas-status').className = `notas-status ${cls}`;
   document.getElementById('notas-status-txt').textContent = txt;
 }
 
@@ -660,12 +770,10 @@ function setStatus(cls, txt) {
 function buildLayerControl() {
   const rows = document.getElementById('layer-rows');
   rows.innerHTML = '';
-
   S.capas.forEach(capa => {
-    const vis = S.layerState[capa.id]?.visible !== false;
-    const op  = Math.round((S.layerState[capa.id]?.opacity ?? capa.opacidad ?? 0.6) * 100);
+    const vis  = S.layerState[capa.id]?.visible !== false;
+    const op   = Math.round((S.layerState[capa.id]?.opacity ?? capa.opacidad ?? 0.6) * 100);
     const opId = `op-${capa.id}`;
-
     const wrap = document.createElement('div');
     wrap.innerHTML = `
       <label class="lc-row">
@@ -680,7 +788,6 @@ function buildLayerControl() {
       </div>`;
     rows.appendChild(wrap);
   });
-
   rows.querySelectorAll('input[type=checkbox]').forEach(chk => {
     chk.addEventListener('change', () => {
       const id = chk.dataset.id;
@@ -690,11 +797,9 @@ function buildLayerControl() {
       if (S.layers[id]) chk.checked ? S.layers[id].addTo(S.map) : S.map.removeLayer(S.layers[id]);
     });
   });
-
   rows.querySelectorAll('input[type=range]').forEach(rng => {
     rng.addEventListener('input', () => {
-      const id  = rng.dataset.id;
-      const val = parseInt(rng.value);
+      const id = rng.dataset.id, val = parseInt(rng.value);
       document.getElementById(`op-${id}-v`).textContent = val + '%';
       if (!S.layerState[id]) S.layerState[id] = {};
       S.layerState[id].opacity = val / 100;
@@ -702,7 +807,6 @@ function buildLayerControl() {
       updateCapa(id);
     });
   });
-
   document.querySelectorAll('input[name=base]').forEach(r => {
     r.addEventListener('change', () => {
       if (!r.checked) return;
@@ -711,7 +815,6 @@ function buildLayerControl() {
       TILE[r.value].addTo(S.map);
     });
   });
-
   document.getElementById('layer-control').style.display = '';
 }
 
@@ -733,11 +836,7 @@ function exportData() {
     exportadoEn: new Date().toISOString(),
     proyecto: document.getElementById('hdr-title').textContent.trim(),
     totalFeatures: S.geojson?.features?.length ?? 0,
-    capas: S.capas.map(c => ({
-      ...c,
-      visible_actual: S.layerState[c.id]?.visible !== false,
-      opacidad_actual: S.layerState[c.id]?.opacity ?? c.opacidad,
-    })),
+    capas: S.capas.map(c => ({ ...c, visible_actual: S.layerState[c.id]?.visible !== false, opacidad_actual: S.layerState[c.id]?.opacity ?? c.opacidad })),
     edits: S.edits,
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' });
@@ -749,41 +848,75 @@ function exportData() {
 
 // ── HEADER EDITABLE ──────────────────────────────────────────────────────────
 function initHeader() {
-  const t  = document.getElementById('hdr-title');
-  const st = document.getElementById('hdr-sub');
-  t.textContent  = S.title;
-  st.textContent = S.subtitle;
+  const t = document.getElementById('hdr-title'), st = document.getElementById('hdr-sub');
+  t.textContent = S.title; st.textContent = S.subtitle;
   t.addEventListener('blur',  () => { S.title    = t.textContent.trim();  persist(); });
   st.addEventListener('blur', () => { S.subtitle = st.textContent.trim(); persist(); });
   [t, st].forEach(el => el.addEventListener('keydown', e => { if (e.key==='Enter') { e.preventDefault(); el.blur(); } }));
+}
+
+// ── RESIZABLE COLUMNS ─────────────────────────────────────────────────────────
+function initResizers() {
+  const body  = document.getElementById('app-body');
+  const saved = localStorage.getItem(COLS_KEY);
+  if (saved) body.style.gridTemplateColumns = saved;
+
+  function makeResizer(id, colIdx) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('mousedown', e => {
+      e.preventDefault();
+      el.classList.add('active');
+      const startX = e.clientX;
+      const cols   = getComputedStyle(body).gridTemplateColumns.split(' ').map(parseFloat);
+      function onMove(ev) {
+        const dx = ev.clientX - startX;
+        if (colIdx === 0) {
+          cols[0] = Math.max(280, cols[0] + dx);
+          cols[2] = Math.max(240, cols[2] - dx);
+        } else {
+          cols[2] = Math.max(240, cols[2] + dx);
+          cols[4] = Math.max(200, cols[4] - dx);
+        }
+        body.style.gridTemplateColumns = `${cols[0]}px 4px ${cols[2]}px 4px ${cols[4]}px`;
+        S.map?.invalidateSize();
+      }
+      function onUp() {
+        el.classList.remove('active');
+        localStorage.setItem(COLS_KEY, body.style.gridTemplateColumns);
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+      }
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+  }
+  makeResizer('resizer-1', 0);
+  makeResizer('resizer-2', 1);
 }
 
 // ── BOOT ─────────────────────────────────────────────────────────────────────
 async function boot() {
   loadSaved();
   initHeader();
-
   try {
     const [rCap, rGeo] = await Promise.all([
       fetch('data/capas.json'),
       fetch('assets/geojson/capas-base.geojson'),
     ]);
     if (!rCap.ok || !rGeo.ok) throw new Error('fetch failed');
-
     S.capas   = (await rCap.json()).capas;
     S.geojson = await rGeo.json();
-
     initMap();
     buildLayerControl();
     buildLegend();
     renderLayers();
     showEmpty();
-
+    initResizers();
     document.getElementById('pill-feat').textContent = `${S.geojson.features.length} FEATURES`;
     document.getElementById('pill-cap').textContent  = `${S.capas.length} CAPAS`;
     document.getElementById('loading').classList.add('hidden');
     document.getElementById('btn-export').addEventListener('click', exportData);
-
   } catch(err) {
     console.error(err);
     document.getElementById('loading').classList.add('hidden');

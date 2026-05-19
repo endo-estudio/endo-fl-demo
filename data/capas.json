@@ -5,7 +5,8 @@
   "capas": [
     {
       "id": "cou",
-      "nombre": "COU",
+      "nombre": "TERRENOS",
+      "folder": "COU",
       "descripcion": "Cobertura de uso del suelo. Incluye polígonos y límites de zonas.",
       "geometrias": ["Polygon", "LineString"],
       "total_features": 26,
@@ -33,7 +34,7 @@
       "total_features": 2,
       "propiedades": ["name", "Nombre", "description", "Descripción", "descripción"],
       "visible": true,
-      "color": "#9C27B0",
+      "color": "#FFD700",
       "opacidad": 0.5
     },
     {
@@ -44,7 +45,7 @@
       "total_features": 10,
       "propiedades": ["name", "Nombre", "description", "Descripción", "descripción"],
       "visible": true,
-      "color": "#212121",
+      "color": "#00FFFF",
       "opacidad": 1.0
     },
     {
