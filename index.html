@@ -338,6 +338,45 @@ textarea.notas-ta::placeholder { color:var(--text-3); font-style:italic; }
   .info-panel,.notas-panel { border-left:none; border-top:1px solid var(--borde); }
   .hdr-actions { display:none; }
 }
+
+/* ── ZONING EDIT MODAL ─────────────────────────── */
+#zoning-modal {
+  display:none; position:fixed; inset:0; z-index:9000;
+  background:rgba(0,0,0,0.75); align-items:center; justify-content:center;
+}
+.ze-panel {
+  background:var(--bg-2); border:1px solid var(--borde-2);
+  border-radius:8px; width:360px; overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,0.8);
+}
+.ze-header {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:16px 20px; background:var(--bg-3); border-bottom:1px solid var(--borde);
+  font-family:'Poppins',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px;
+}
+.ze-header button { background:transparent; border:none; color:var(--text-2); cursor:pointer; font-size:14px; padding:0; }
+.ze-header button:hover { color:var(--text); }
+.ze-body { padding:18px 20px; display:flex; flex-direction:column; gap:14px; }
+.ze-row { display:flex; align-items:center; gap:12px; }
+.ze-label {
+  font-family:'Poppins',sans-serif; font-size:9px; font-weight:700;
+  letter-spacing:1.5px; color:var(--text-3); width:120px; flex-shrink:0;
+}
+.ze-input {
+  flex:1; background:var(--bg-3); border:1px solid var(--borde-2);
+  border-radius:3px; padding:7px 10px; font-size:11px; color:var(--text);
+  font-family:'Open Sans',sans-serif; outline:none; text-transform:none;
+}
+.ze-input:focus { border-color:var(--text); }
+.ze-range { flex:1; accent-color:var(--text); cursor:pointer; }
+.ze-val {
+  font-family:'Poppins',sans-serif; font-size:10px; font-weight:700;
+  color:var(--text); min-width:44px; text-align:right;
+}
+.ze-footer {
+  display:flex; gap:8px; justify-content:flex-end;
+  padding:14px 20px; border-top:1px solid var(--borde);
+}
 </style>
 </head>
 <body>
@@ -459,6 +498,8 @@ const S = {
   edits:      {},
   title:      'FIND LANDING · VISOR TERRITORIAL',
   subtitle:   'LOTES · SECTORES · CORREDORES · ZONIFICACIÓN',
+  zoning:     { visible:true, opacity:0.7, lat:-26.797, lng:-65.293, scale:1.0, rotation:0 },
+  zoningLayer: null,
 };
 
 // ── PERSISTENCE ──────────────────────────────────────────────────────────────
@@ -469,6 +510,7 @@ function loadSaved() {
     if (d.layerState) Object.assign(S.layerState, d.layerState);
     if (d.title)      S.title      = d.title;
     if (d.subtitle)   S.subtitle   = d.subtitle;
+    if (d.zoning)     Object.assign(S.zoning, d.zoning);
   } catch(e) {}
 }
 function persist() {
@@ -476,6 +518,7 @@ function persist() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
       edits: S.edits, layerState: S.layerState,
       title: S.title, subtitle: S.subtitle,
+      zoning: S.zoning,
     }));
   } catch(e) {}
 }
@@ -525,6 +568,133 @@ function parseUrbanistic(desc) {
     'RET. FONDO':  get(/RETIRO\s+FONDO\s*=\s*([\d.,]+)/i),
     'M2 CONSTR.':  get(/METROS\s+CONSTRUIBLES\s*=\s*([\d.,]+)/i),
   };
+}
+
+// ── ZONING OVERLAY ───────────────────────────────────────────────────────────
+const ZONING_BASE_W = 0.03;
+const ZONING_BASE_H = 0.025;
+let _zoningSnapshot = null;
+
+function zoningBounds() {
+  const hw = (ZONING_BASE_W * S.zoning.scale) / 2;
+  const hh = (ZONING_BASE_H * S.zoning.scale) / 2;
+  return [[S.zoning.lat - hh, S.zoning.lng - hw],
+          [S.zoning.lat + hh, S.zoning.lng + hw]];
+}
+
+function applyZoningRotation() {
+  const el = S.zoningLayer?.getElement?.();
+  if (el) el.style.transform = `rotate(${S.zoning.rotation}deg)`;
+}
+
+function applyZoningState(save = false) {
+  if (!S.zoningLayer) return;
+  S.zoningLayer.setBounds(zoningBounds());
+  S.zoningLayer.setOpacity(S.zoning.opacity);
+  applyZoningRotation();
+  if (save) persist();
+}
+
+function initZoningOverlay() {
+  S.zoningLayer = L.imageOverlay('Mapa_Zonificaciones.png', zoningBounds(), {
+    opacity: S.zoning.opacity,
+    interactive: true,
+    zIndex: 200,
+  });
+  S.zoningLayer.on('load', () => {
+    const el = S.zoningLayer.getElement();
+    if (el) {
+      el.style.transformOrigin = 'center center';
+      applyZoningRotation();
+      el.addEventListener('contextmenu', e => { e.preventDefault(); openZoningEditor(); });
+    }
+  });
+  if (S.zoning.visible) S.zoningLayer.addTo(S.map);
+}
+
+function buildZoningLayerControl() {
+  const container = document.getElementById('layer-control');
+  const wrap = document.createElement('div');
+  wrap.id = 'zoning-lc';
+  const op = Math.round(S.zoning.opacity * 100);
+  wrap.innerHTML = `
+    <div class="lc-divider"></div>
+    <div class="lc-section">IMAGEN OVERLAY</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0">
+      <label class="lc-row" style="margin:0">
+        <input type="checkbox" id="chk-zoning" ${S.zoning.visible ? 'checked' : ''}>
+        <span class="lc-dot" style="background:rgba(255,255,255,0.25)"></span>
+        <span>ZONING</span>
+      </label>
+      <button class="btn-edit" onclick="openZoningEditor()" style="font-size:8px;padding:2px 8px;letter-spacing:1px">✎ EDITAR</button>
+    </div>
+    <div class="lc-opacity">
+      <span>OPACIDAD</span>
+      <input type="range" id="op-zoning" min="0" max="100" value="${op}">
+      <span class="lc-val" id="op-zoning-v">${op}%</span>
+    </div>`;
+  container.appendChild(wrap);
+
+  document.getElementById('chk-zoning').addEventListener('change', e => {
+    S.zoning.visible = e.target.checked;
+    persist();
+    if (S.zoning.visible) S.zoningLayer?.addTo(S.map);
+    else if (S.zoningLayer) S.map.removeLayer(S.zoningLayer);
+  });
+
+  document.getElementById('op-zoning').addEventListener('input', e => {
+    const val = parseInt(e.target.value);
+    document.getElementById('op-zoning-v').textContent = val + '%';
+    S.zoning.opacity = val / 100;
+    S.zoningLayer?.setOpacity(S.zoning.opacity);
+    persist();
+  });
+}
+
+function openZoningEditor() {
+  _zoningSnapshot = { ...S.zoning };
+  document.getElementById('ze-lat').value   = S.zoning.lat;
+  document.getElementById('ze-lng').value   = S.zoning.lng;
+  document.getElementById('ze-scale').value = S.zoning.scale;
+  document.getElementById('ze-scale-v').textContent = S.zoning.scale.toFixed(2) + '×';
+  document.getElementById('ze-rot').value   = S.zoning.rotation;
+  document.getElementById('ze-rot-v').textContent   = S.zoning.rotation + '°';
+
+  document.getElementById('ze-scale').oninput = e => {
+    const v = parseFloat(e.target.value);
+    document.getElementById('ze-scale-v').textContent = v.toFixed(2) + '×';
+    S.zoning.scale = v;
+    applyZoningState();
+  };
+  document.getElementById('ze-rot').oninput = e => {
+    const v = parseInt(e.target.value);
+    document.getElementById('ze-rot-v').textContent = v + '°';
+    S.zoning.rotation = v;
+    applyZoningState();
+  };
+  document.getElementById('zoning-modal').style.display = 'flex';
+}
+
+function applyZoningFromModal() {
+  const lat   = parseFloat(document.getElementById('ze-lat').value);
+  const lng   = parseFloat(document.getElementById('ze-lng').value);
+  if (!isNaN(lat)) S.zoning.lat = lat;
+  if (!isNaN(lng)) S.zoning.lng = lng;
+  S.zoning.scale    = parseFloat(document.getElementById('ze-scale').value) || 1;
+  S.zoning.rotation = parseInt(document.getElementById('ze-rot').value)     || 0;
+  applyZoningState();
+}
+
+function cancelZoningEditor() {
+  if (_zoningSnapshot) { Object.assign(S.zoning, _zoningSnapshot); applyZoningState(); }
+  document.getElementById('zoning-modal').style.display = 'none';
+}
+
+function saveZoningEdits() {
+  applyZoningFromModal();
+  applyZoningState(true);
+  document.getElementById('zoning-modal').style.display = 'none';
+  showToast('✓ ZONING GUARDADO', 'success');
 }
 
 // ── MAP ──────────────────────────────────────────────────────────────────────
@@ -837,6 +1007,7 @@ function buildLayerControl() {
     });
   });
   document.getElementById('layer-control').style.display = '';
+  buildZoningLayerControl();
 }
 
 // ── LEGEND ───────────────────────────────────────────────────────────────────
@@ -997,6 +1168,7 @@ async function boot() {
     S.geojson = await rGeo.json();
     await cargarCambiosDesdeGitHub();
     initMap();
+    initZoningOverlay();
     buildLayerControl();
     buildLegend();
     renderLayers();
@@ -1015,5 +1187,45 @@ async function boot() {
 
 boot();
 </script>
+
+<!-- ZONING EDIT MODAL -->
+<div id="zoning-modal">
+  <div class="ze-panel">
+    <div class="ze-header">
+      <span>✎ EDITAR · ZONING</span>
+      <button onclick="cancelZoningEditor()">✕</button>
+    </div>
+    <div class="ze-body">
+      <div class="ze-row">
+        <label class="ze-label">LATITUD CENTRO</label>
+        <input id="ze-lat" class="ze-input" type="number" step="0.0001">
+      </div>
+      <div class="ze-row">
+        <label class="ze-label">LONGITUD CENTRO</label>
+        <input id="ze-lng" class="ze-input" type="number" step="0.0001">
+      </div>
+      <div class="ze-row">
+        <label class="ze-label">ESCALA</label>
+        <div style="display:flex;align-items:center;gap:8px;flex:1">
+          <input id="ze-scale" class="ze-range" type="range" min="0.1" max="3.0" step="0.05">
+          <span class="ze-val" id="ze-scale-v">1.00×</span>
+        </div>
+      </div>
+      <div class="ze-row">
+        <label class="ze-label">ROTACIÓN</label>
+        <div style="display:flex;align-items:center;gap:8px;flex:1">
+          <input id="ze-rot" class="ze-range" type="range" min="0" max="360" step="1">
+          <span class="ze-val" id="ze-rot-v">0°</span>
+        </div>
+      </div>
+    </div>
+    <div class="ze-footer">
+      <button class="btn-action" onclick="cancelZoningEditor()">CANCELAR</button>
+      <button class="btn-action" onclick="applyZoningFromModal()">PREVISUALIZAR</button>
+      <button class="btn-action primary" onclick="saveZoningEdits()">ACEPTAR</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
