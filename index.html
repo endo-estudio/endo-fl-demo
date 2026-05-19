@@ -1323,6 +1323,7 @@ async function cargarCambiosDesdeGitHub() {
 
     if (cambios.edits)      Object.assign(S.edits,      cambios.edits);
     if (cambios.layerState) Object.assign(S.layerState, cambios.layerState);
+    if (cambios.zoning)     Object.assign(S.zoning,     cambios.zoning);
     if (cambios.titulo)     S.title    = cambios.titulo;
     if (cambios.subtitulo)  S.subtitle = cambios.subtitulo;
 
