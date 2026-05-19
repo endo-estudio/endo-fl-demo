@@ -1,0 +1,1961 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.3040387,
+              -26.7958314,
+              0.0
+            ],
+            [
+              -65.304379,
+              -26.7976163,
+              0.0
+            ],
+            [
+              -65.3014125,
+              -26.7980616,
+              0.0
+            ],
+            [
+              -65.3010262,
+              -26.7963187,
+              0.0
+            ],
+            [
+              -65.3040387,
+              -26.7958314,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Padron Provincial: 877349",
+        "description": "Descripción: C6a ( CORREDOR URB. FUTURA)<br>nombre: Propietario Legal: S.A. AZUCARERA JUSTINIANO FRIAS SILVA<br>descripción: - SUP DE LOTE = 57.353 m2<br>- FOS = 0,5 / FOT = 1<br>- DENSIDAD 250 hab/ha<br>- ALTURA MÁMIXA = 14m / PB+3<br>- RETIRO FRENTE = 8 m<br>- RETIRO FONDO = 12m<br><br>METROS CONSTRUIBLES = 57.353 m2",
+        "Descripción": "C6a ( CORREDOR URB. FUTURA)",
+        "nombre": "Propietario Legal: S.A. AZUCARERA JUSTINIANO FRIAS SILVA",
+        "descripción": "- SUP DE LOTE = 57.353 m2\n- FOS = 0,5 / FOT = 1\n- DENSIDAD 250 hab/ha\n- ALTURA MÁMIXA = 14m / PB+3\n- RETIRO FRENTE = 8 m\n- RETIRO FONDO = 12m\n\nMETROS CONSTRUIBLES = 57.353 m2",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.2957155,
+              -26.7973387,
+              0.0
+            ],
+            [
+              -65.295989,
+              -26.798823,
+              0.0
+            ],
+            [
+              -65.2937414,
+              -26.7991821,
+              0.0
+            ],
+            [
+              -65.2934249,
+              -26.7977217,
+              0.0
+            ],
+            [
+              -65.2957155,
+              -26.7973387,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Padron Provincial: 877833",
+        "description": "Descripción: C6a ( CORREDOR URB. FUTURA)<br>nombre: Propietario Legal: S.A. AZUCARERA JUSTINIANO FRIAS SILVA<br>descripción: - SUP DE LOTE = 53.000 m2<br>- FOS = 0,5 / FOT = 1.1<br>- DENSIDAD 300 hab/ha<br>- ALTURA MÁMIXA = 17m / PB+4<br>- RETIRO FRENTE = 8 m<br>- RETIRO FONDO = 15m<br><br>METROS CONSTRUIBLES = 58.300m2",
+        "Descripción": "C6a ( CORREDOR URB. FUTURA)",
+        "nombre": "Propietario Legal: S.A. AZUCARERA JUSTINIANO FRIAS SILVA",
+        "descripción": "- SUP DE LOTE = 53.000 m2\n- FOS = 0,5 / FOT = 1.1\n- DENSIDAD 300 hab/ha\n- ALTURA MÁMIXA = 17m / PB+4\n- RETIRO FRENTE = 8 m\n- RETIRO FONDO = 15m\n\nMETROS CONSTRUIBLES = 58.300m2",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.2919819,
+              -26.7980689,
+              0.0
+            ],
+            [
+              -65.2921991,
+              -26.7990959,
+              0.0
+            ],
+            [
+              -65.2904503,
+              -26.7994024,
+              0.0
+            ],
+            [
+              -65.2902169,
+              -26.798325,
+              0.0
+            ],
+            [
+              -65.2919819,
+              -26.7980689,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Padron Provincial: 4781107",
+        "description": "Descripción: C6a ( CORREDOR URB. FUTURA)<br>nombre: Inscripcion Dominial: T-57536<br>1) Propietario Legal: RUIZ JUAREZ, DIEGO JOSE (33.33%)<br>2) Propietario Legal: RUIZ JUAREZ, MARCELO ALEJANDRO (33.33%)<br>3) Propietario Legal: RUIZ JUAREZ, CARLOS ALBERTO (33.34%)<br>descripción: - SUP DE LOTE = 21.500 m2<br>- FOS = 0,5 / FOT = 1.1<br>- DENSIDAD 300 hab/ha<br>- ALTURA MÁMIXA = 17m / PB+4<br>- RETIRO FRENTE = 8 m<br>- RETIRO FONDO = 15m<br><br>METROS CONSTRUIBLES = 23.650m2",
+        "Descripción": "C6a ( CORREDOR URB. FUTURA)",
+        "nombre": "Inscripcion Dominial: T-57536\n1) Propietario Legal: RUIZ JUAREZ, DIEGO JOSE (33.33%)\n2) Propietario Legal: RUIZ JUAREZ, MARCELO ALEJANDRO (33.33%)\n3) Propietario Legal: RUIZ JUAREZ, CARLOS ALBERTO (33.34%)",
+        "descripción": "- SUP DE LOTE = 21.500 m2\n- FOS = 0,5 / FOT = 1.1\n- DENSIDAD 300 hab/ha\n- ALTURA MÁMIXA = 17m / PB+4\n- RETIRO FRENTE = 8 m\n- RETIRO FONDO = 15m\n\nMETROS CONSTRUIBLES = 23.650m2",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.2883196,
+              -26.8170163,
+              0.0
+            ],
+            [
+              -65.288443,
+              -26.8175693,
+              0.0
+            ],
+            [
+              -65.287869,
+              -26.8176746,
+              0.0
+            ],
+            [
+              -65.287751,
+              -26.8171264,
+              0.0
+            ],
+            [
+              -65.2883196,
+              -26.8170163,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Padron Provincial: 775069",
+        "description": "Descripción: RE2 (RESIDENCIAL EXCLUSIVO<br>nombre: Propietario Legal: MATAS, ALBA ADRIANA (100.00%)<br>descripción: - SUP DE LOTE = 3.230 m2<br>- FOS = 0,5 / FOT = 0,7<br>- DENSIDAD 150 hab/ha<br>- ALTURA MÁMIXA = 8m / PB+1<br>- RETIRO FRENTE = 6 m<br>- RETIRO FONDO = 8m<br><br>METROS CONSTRUIBLES = 2.261 m2",
+        "Descripción": "RE2 (RESIDENCIAL EXCLUSIVO",
+        "nombre": "Propietario Legal: MATAS, ALBA ADRIANA (100.00%)",
+        "descripción": "- SUP DE LOTE = 3.230 m2\n- FOS = 0,5 / FOT = 0,7\n- DENSIDAD 150 hab/ha\n- ALTURA MÁMIXA = 8m / PB+1\n- RETIRO FRENTE = 6 m\n- RETIRO FONDO = 8m\n\nMETROS CONSTRUIBLES = 2.261 m2",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.2881554,
+              -26.8169426,
+              0.0
+            ],
+            [
+              -65.2879864,
+              -26.8162724,
+              0.0
+            ],
+            [
+              -65.2884724,
+              -26.8161952,
+              0.0
+            ],
+            [
+              -65.2886106,
+              -26.8168511,
+              0.0
+            ],
+            [
+              -65.2881554,
+              -26.8169426,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Padron Provincial: 675617/19",
+        "description": "Descripción: RE2 (RESIDENCIAL EXCLUSIVO)<br>nombre: 2) Propietario Legal: ANDREOZZI, MANUEL ENRIQUE  <br>descripción: - SUP DE LOTE = 3.545 m2<br>- FOS = 0,5 / FOT = 0,7<br>- DENSIDAD 150 hab/ha<br>- ALTURA MÁMIXA = 8m / PB+1<br>- RETIRO FRENTE = 6 m<br>- RETIRO FONDO = 8m<br><br>METROS CONSTRUIBLES = 2.481 m2",
+        "Descripción": "RE2 (RESIDENCIAL EXCLUSIVO)",
+        "nombre": "2) Propietario Legal: ANDREOZZI, MANUEL ENRIQUE  ",
+        "descripción": "- SUP DE LOTE = 3.545 m2\n- FOS = 0,5 / FOT = 0,7\n- DENSIDAD 150 hab/ha\n- ALTURA MÁMIXA = 8m / PB+1\n- RETIRO FRENTE = 6 m\n- RETIRO FONDO = 8m\n\nMETROS CONSTRUIBLES = 2.481 m2",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.2886338,
+              -26.8161713,
+              0.0
+            ],
+            [
+              -65.2887733,
+              -26.8168153,
+              0.0
+            ],
+            [
+              -65.2886106,
+              -26.8168511,
+              0.0
+            ],
+            [
+              -65.2884724,
+              -26.8161952,
+              0.0
+            ],
+            [
+              -65.2886338,
+              -26.8161713,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Padron Provincial: 675616",
+        "description": "Descripción: RE2 (RESIDENCIAL EXCLUSIVO<br>nombre: 2) Propietario Legal: SAIN, MABEL GRACIELA (50.00%)<br>2) Propietario Legal: ASSAD, CARLOS OMAR (50.00%<br>descripción: - SUP DE LOTE = 1.200 m2<br>- FOS = 0,5 / FOT = 0,7<br>- DENSIDAD 150 hab/ha<br>- ALTURA MÁMIXA = 8m / PB+1<br>- RETIRO FRENTE = 6 m<br>- RETIRO FONDO = 8m<br><br>METROS CONSTRUIBLES = 840 m2",
+        "Descripción": "RE2 (RESIDENCIAL EXCLUSIVO",
+        "nombre": "2) Propietario Legal: SAIN, MABEL GRACIELA (50.00%)\n2) Propietario Legal: ASSAD, CARLOS OMAR (50.00%",
+        "descripción": "- SUP DE LOTE = 1.200 m2\n- FOS = 0,5 / FOT = 0,7\n- DENSIDAD 150 hab/ha\n- ALTURA MÁMIXA = 8m / PB+1\n- RETIRO FRENTE = 6 m\n- RETIRO FONDO = 8m\n\nMETROS CONSTRUIBLES = 840 m2",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.2882778,
+              -26.8182134,
+              0.0
+            ],
+            [
+              -65.2881209,
+              -26.8182482,
+              0.0
+            ],
+            [
+              -65.2879948,
+              -26.8176509,
+              0.0
+            ],
+            [
+              -65.2881584,
+              -26.8176258,
+              0.0
+            ],
+            [
+              -65.2882778,
+              -26.8182134,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Padron Provincial: 677542 / L12",
+        "description": "Descripción: RE2 (RESIDENCIAL EXCLUSIVO<br>nombre: 2) Propietario Legal: GONZALEZ DE GUEYDAN, ESTELA MARIA (100.00%<br>descripción: - SUP DE LOTE = 950m2<br>- FOS = 0,5 / FOT = 0,7<br>- DENSIDAD 150 hab/ha<br>- ALTURA MÁMIXA = 8m / PB+1<br>- RETIRO FRENTE = 6 m<br>- RETIRO FONDO = 8m<br><br>METROS CONSTRUIBLES = 665 m2",
+        "Descripción": "RE2 (RESIDENCIAL EXCLUSIVO",
+        "nombre": "2) Propietario Legal: GONZALEZ DE GUEYDAN, ESTELA MARIA (100.00%",
+        "descripción": "- SUP DE LOTE = 950m2\n- FOS = 0,5 / FOT = 0,7\n- DENSIDAD 150 hab/ha\n- ALTURA MÁMIXA = 8m / PB+1\n- RETIRO FRENTE = 6 m\n- RETIRO FONDO = 8m\n\nMETROS CONSTRUIBLES = 665 m2",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.2920283,
+              -26.8179327,
+              0.0
+            ],
+            [
+              -65.2921289,
+              -26.818354,
+              0.0
+            ],
+            [
+              -65.2918875,
+              -26.8183982,
+              0.0
+            ],
+            [
+              -65.2917869,
+              -26.8179793,
+              0.0
+            ],
+            [
+              -65.2920283,
+              -26.8179327,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Padron Provincial: 280019",
+        "description": "Descripción: AAP (Area de Protección Patrimonial)<br>nombre: 2) Propietario Legal: ALBURQUERQUE, OSCAR ALBERTO (100.00%<br>descripción: - SUP DE LOTE = 1.153 m2 <br>- FOS = 0,5 / FOT = 0,7 Residencial / 0,3 No Residencial<br>- DENSIDAD 200 hab/ha<br>- ALTURA MÁMIXA = 8m / PB+1<br>- RETIRO FRENTE = 6 m<br>- RETIRO FONDO = 8m<br><br>METROS CONSTRUIBLES VIVIENDA =  807m2",
+        "Descripción": "AAP (Area de Protección Patrimonial)",
+        "nombre": "2) Propietario Legal: ALBURQUERQUE, OSCAR ALBERTO (100.00%",
+        "descripción": "- SUP DE LOTE = 1.153 m2 \n- FOS = 0,5 / FOT = 0,7 Residencial / 0,3 No Residencial\n- DENSIDAD 200 hab/ha\n- ALTURA MÁMIXA = 8m / PB+1\n- RETIRO FRENTE = 6 m\n- RETIRO FONDO = 8m\n\nMETROS CONSTRUIBLES VIVIENDA =  807m2",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.2923569,
+              -26.8183181,
+              0.0
+            ],
+            [
+              -65.2924172,
+              -26.8186077,
+              0.0
+            ],
+            [
+              -65.291968,
+              -26.8186963,
+              0.0
+            ],
+            [
+              -65.2918875,
+              -26.8183982,
+              0.0
+            ],
+            [
+              -65.2923569,
+              -26.8183181,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Padron Provincial: 81783",
+        "description": "Descripción: AAP (Area de Protección Patrimonial)<br>nombre: 2) Propietario Legal: CONTI, GUILLERMO FRANCISCO (.00%)<br>2) Propietario Legal: RIOS, ESTELA LILIANA (.00%)<br>descripción: - SUP DE LOTE = 1.545 m2<br>- FOS = 0,5 / FOT = 0,7 Residencial / 0,3 No Residencial<br>- DENSIDAD 200 hab/ha<br>- ALTURA MÁMIXA = 8m / PB+1<br>- RETIRO FRENTE = 6 m<br>- RETIRO FONDO = 8m<br><br>METROS CONSTRUIBLES VIVIENDA = 1.080m2",
+        "Descripción": "AAP (Area de Protección Patrimonial)",
+        "nombre": "2) Propietario Legal: CONTI, GUILLERMO FRANCISCO (.00%)\n2) Propietario Legal: RIOS, ESTELA LILIANA (.00%)",
+        "descripción": "- SUP DE LOTE = 1.545 m2\n- FOS = 0,5 / FOT = 0,7 Residencial / 0,3 No Residencial\n- DENSIDAD 200 hab/ha\n- ALTURA MÁMIXA = 8m / PB+1\n- RETIRO FRENTE = 6 m\n- RETIRO FONDO = 8m\n\nMETROS CONSTRUIBLES VIVIENDA = 1.080m2",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.2848687,
+              -26.8124563,
+              0.0
+            ],
+            [
+              -65.2838495,
+              -26.8126574,
+              0.0
+            ],
+            [
+              -65.2837797,
+              -26.8123702,
+              0.0
+            ],
+            [
+              -65.2847882,
+              -26.8121691,
+              0.0
+            ],
+            [
+              -65.2848687,
+              -26.8124563,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Padron Provincial: 183473",
+        "description": "Descripción: RE2 (RESIDENCIAL EXCLUSIVO)<br>nombre: 1) Propietario Legal: HAEL, IGNACIO FABIO (100.00%)<br>descripción: - SUP DE LOTE = 2.200 m2<br>- FOS = 0,5 / FOT = 0,7<br>- DENSIDAD 150 hab/ha<br>- ALTURA MÁMIXA = 8m / PB+1<br>- RETIRO FRENTE = 6 m<br>- RETIRO FONDO = 8m<br><br>METROS CONSTRUIBLES = 1.540 m2",
+        "Descripción": "RE2 (RESIDENCIAL EXCLUSIVO)",
+        "nombre": "1) Propietario Legal: HAEL, IGNACIO FABIO (100.00%)",
+        "descripción": "- SUP DE LOTE = 2.200 m2\n- FOS = 0,5 / FOT = 0,7\n- DENSIDAD 150 hab/ha\n- ALTURA MÁMIXA = 8m / PB+1\n- RETIRO FRENTE = 6 m\n- RETIRO FONDO = 8m\n\nMETROS CONSTRUIBLES = 1.540 m2",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.2839218,
+              -26.813074,
+              0.0
+            ],
+            [
+              -65.284394,
+              -26.8129974,
+              0.0
+            ],
+            [
+              -65.284477,
+              -26.8134115,
+              0.0
+            ],
+            [
+              -65.2842062,
+              -26.8134809,
+              0.0
+            ],
+            [
+              -65.284056,
+              -26.813512,
+              0.0
+            ],
+            [
+              -65.2840023,
+              -26.8133995,
+              0.0
+            ],
+            [
+              -65.2839218,
+              -26.813074,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Padron Provincial: 677088",
+        "description": "Descripción: RE2 (RESIDENCIAL EXCLUSIVO)<br>nombre: 1) Propietario Legal: CHALON, ESTHER PERLA (100.00%)<br>descripción: - SUP DE LOTE = 2.180 m2<br>- FOS = 0,5 / FOT = 0,7<br>- DENSIDAD 150 hab/ha<br>- ALTURA MÁMIXA = 8m / PB+1<br>- RETIRO FRENTE = 6 m<br>- RETIRO FONDO = 8m<br><br>METROS CONSTRUIBLES = 1.526 m2",
+        "Descripción": "RE2 (RESIDENCIAL EXCLUSIVO)",
+        "nombre": "1) Propietario Legal: CHALON, ESTHER PERLA (100.00%)",
+        "descripción": "- SUP DE LOTE = 2.180 m2\n- FOS = 0,5 / FOT = 0,7\n- DENSIDAD 150 hab/ha\n- ALTURA MÁMIXA = 8m / PB+1\n- RETIRO FRENTE = 6 m\n- RETIRO FONDO = 8m\n\nMETROS CONSTRUIBLES = 1.526 m2",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.2920283,
+              -26.8179327,
+              0.0
+            ],
+            [
+              -65.2922526,
+              -26.8178931,
+              0.0
+            ],
+            [
+              -65.2922741,
+              -26.817905,
+              0.0
+            ],
+            [
+              -65.2923345,
+              -26.8181157,
+              0.0
+            ],
+            [
+              -65.2920823,
+              -26.8181636,
+              0.0
+            ],
+            [
+              -65.2920283,
+              -26.8179327,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Padron Provincial: 81408",
+        "description": "Descripción: AAP (Area de Protección Patrimonial)<br>nombre: 1) Propietario Legal: RONDON PARAJON, MONICA LEONOR (50.00%)<br>2) Propietario Legal: PEGORARO, HUMBERTO ANIBAL (50.00%)<br>descripción: - SUP DE LOTE =670 m2<br>- FOS = 0,5 / FOT = 0,7 Residencial / 0,3 No Residencial<br>- DENSIDAD 200 hab/ha<br>- ALTURA MÁMIXA = 8m / PB+1<br>- RETIRO FRENTE = 6 m<br>- RETIRO FONDO = 8m<br><br>METROS CONSTRUIBLES VIVIENDA = 469m2",
+        "Descripción": "AAP (Area de Protección Patrimonial)",
+        "nombre": "1) Propietario Legal: RONDON PARAJON, MONICA LEONOR (50.00%)\n2) Propietario Legal: PEGORARO, HUMBERTO ANIBAL (50.00%)",
+        "descripción": "- SUP DE LOTE =670 m2\n- FOS = 0,5 / FOT = 0,7 Residencial / 0,3 No Residencial\n- DENSIDAD 200 hab/ha\n- ALTURA MÁMIXA = 8m / PB+1\n- RETIRO FRENTE = 6 m\n- RETIRO FONDO = 8m\n\nMETROS CONSTRUIBLES VIVIENDA = 469m2",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.2737768,
+              -26.8042133,
+              0.0
+            ],
+            [
+              -65.2747049,
+              -26.8080054,
+              0.0
+            ],
+            [
+              -65.2708425,
+              -26.8086804,
+              0.0
+            ],
+            [
+              -65.2704134,
+              -26.8087666,
+              0.0
+            ],
+            [
+              -65.2692922,
+              -26.8049411,
+              0.0
+            ],
+            [
+              -65.2698823,
+              -26.8047065,
+              0.0
+            ],
+            [
+              -65.2706011,
+              -26.8045245,
+              0.0
+            ],
+            [
+              -65.2711858,
+              -26.8044288,
+              0.0
+            ],
+            [
+              -65.2722051,
+              -26.8043091,
+              0.0
+            ],
+            [
+              -65.2735623,
+              -26.8042372,
+              0.0
+            ],
+            [
+              -65.2737768,
+              -26.8042133,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Graña-Matas - L21",
+        "description": "Descripción: <br>nombre: <br>descripción:",
+        "Descripción": "",
+        "nombre": "",
+        "descripción": "",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.3014125,
+              -26.7980616,
+              0.0
+            ],
+            [
+              -65.3014261,
+              -26.7981274,
+              0.0
+            ],
+            [
+              -65.3018552,
+              -26.800488,
+              0.0
+            ],
+            [
+              -65.3006965,
+              -26.8005934,
+              0.0
+            ],
+            [
+              -65.3002459,
+              -26.798295,
+              0.0
+            ],
+            [
+              -65.3002674,
+              -26.7982184,
+              0.0
+            ],
+            [
+              -65.3014125,
+              -26.7980616,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Padron Provincial: 875521",
+        "description": "Descripción: C1b ( CORREDOR )<br>nombre: Propietario Legal: OBISPADO DE LA DIOCESIS DE LA SANTISIMA CONCEPCION<br>descripción: - SUP DE LOTE = 34.200 m2<br>- FOS = 0,5 / FOT = 0,9<br>- DENSIDAD 200 hab/ha<br>- ALTURA MÁMIXA = 11m / PB+2<br>- RETIRO FRENTE = 8 m<br>- RETIRO FONDO = 10m<br><br>METROS CONSTRUIBLES = 30.780 m2",
+        "Descripción": "C1b ( CORREDOR )",
+        "nombre": "Propietario Legal: OBISPADO DE LA DIOCESIS DE LA SANTISIMA CONCEPCION",
+        "descripción": "- SUP DE LOTE = 34.200 m2\n- FOS = 0,5 / FOT = 0,9\n- DENSIDAD 200 hab/ha\n- ALTURA MÁMIXA = 11m / PB+2\n- RETIRO FRENTE = 8 m\n- RETIRO FONDO = 10m\n\nMETROS CONSTRUIBLES = 30.780 m2",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.2690934,
+              -26.7946055,
+              0.0
+            ],
+            [
+              -65.2713679,
+              -26.7941171,
+              0.0
+            ],
+            [
+              -65.2736209,
+              -26.7935807,
+              0.0
+            ],
+            [
+              -65.2736639,
+              -26.7938872,
+              0.0
+            ],
+            [
+              -65.2691149,
+              -26.7949023,
+              0.0
+            ],
+            [
+              -65.2690934,
+              -26.7946055,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "PORTILLO NORTE SENDEROS",
+        "description": "Descripción: <br>nombre: <br>descripción:",
+        "Descripción": "",
+        "nombre": "",
+        "descripción": "",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.3151049,
+              -26.8010223,
+              0.0
+            ],
+            [
+              -65.3121223,
+              -26.801482,
+              0.0
+            ],
+            [
+              -65.3118701,
+              -26.8003902,
+              0.0
+            ],
+            [
+              -65.3151049,
+              -26.8010223,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Padron Provincial: 676368",
+        "description": "Descripción: C1c ( CORREDOR )<br>nombre: Propietario Legal: MUNICIPALIDAD DE YERBA BUENA<br>descripción: - SUP DE LOTE = 14.900 m2<br>- FOS = 0,5 / FOT = 0,7<br>- DENSIDAD 150 hab/ha<br>- ALTURA MÁMIXA = 8m / PB+1<br>- RETIRO FRENTE = 6m<br>- RETIRO FONDO = 8m<br><br>METROS CONSTRUIBLES = 10.430 m2<br>",
+        "Descripción": "C1c ( CORREDOR )",
+        "nombre": "Propietario Legal: MUNICIPALIDAD DE YERBA BUENA",
+        "descripción": "- SUP DE LOTE = 14.900 m2\n- FOS = 0,5 / FOT = 0,7\n- DENSIDAD 150 hab/ha\n- ALTURA MÁMIXA = 8m / PB+1\n- RETIRO FRENTE = 6m\n- RETIRO FONDO = 8m\n\nMETROS CONSTRUIBLES = 10.430 m2\n",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -65.301254,
+            -26.8116285,
+            0.0
+          ],
+          [
+            -65.3053055,
+            -26.8237535,
+            0.0
+          ],
+          [
+            -65.3067646,
+            -26.8334807,
+            0.0
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Av. Solano Vera",
+        "description": "Descripción: <br>nombre: <br>descripción:",
+        "Descripción": "",
+        "nombre": "",
+        "descripción": "",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -65.2820879,
+            -26.8153045,
+            0.0
+          ],
+          [
+            -65.2795988,
+            -26.8033925,
+            0.0
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Calle Venzuela",
+        "description": "Descripción: <br>nombre: <br>descripción:",
+        "Descripción": "",
+        "nombre": "",
+        "descripción": "",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.3145315,
+              -26.7941555,
+              0.0
+            ],
+            [
+              -65.3149108,
+              -26.7967321,
+              0.0
+            ],
+            [
+              -65.3097036,
+              -26.7975456,
+              0.0
+            ],
+            [
+              -65.3093173,
+              -26.7949983,
+              0.0
+            ],
+            [
+              -65.3145315,
+              -26.7941555,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Padron Provincial: 675455",
+        "description": "Descripción: RIT2 (RESIDENCIAL DE INTEGRACION TERRITORIAL<br>nombre: Propietario Legal: AERO CLUB TUCUMAN SOCIEDAD CIVIL <br>descripción: - SUP DE LOTE = 155.000 m2<br>- FOS = 0,35 / FOT = 0,4<br>- DENSIDAD 75 hab/ha<br>- ALTURA MÁMIXA = 8m / PB+1<br>- RETIRO FRENTE = 8 m<br>- RETIRO FONDO = 10m<br><br>METROS CONSTRUIBLES = 62.000 m2<br><br>",
+        "Descripción": "RIT2 (RESIDENCIAL DE INTEGRACION TERRITORIAL",
+        "nombre": "Propietario Legal: AERO CLUB TUCUMAN SOCIEDAD CIVIL ",
+        "descripción": "- SUP DE LOTE = 155.000 m2\n- FOS = 0,35 / FOT = 0,4\n- DENSIDAD 75 hab/ha\n- ALTURA MÁMIXA = 8m / PB+1\n- RETIRO FRENTE = 8 m\n- RETIRO FONDO = 10m\n\nMETROS CONSTRUIBLES = 62.000 m2\n\n",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.3097036,
+              -26.7975456,
+              0.0
+            ],
+            [
+              -65.304547,
+              -26.7983493,
+              0.0
+            ],
+            [
+              -65.3040387,
+              -26.7958314,
+              0.0
+            ],
+            [
+              -65.3093173,
+              -26.7949983,
+              0.0
+            ],
+            [
+              -65.3097036,
+              -26.7975456,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Padron Provincial: 675455",
+        "description": "Descripción: RE1 / RE2 (RESIDENCIAL EXCLUSIVO<br>nombre: Propietario Legal: AERO CLUB TUCUMAN SOCIEDAD CIVI<br>descripción: - SUP DE LOTE = 145.000 m2<br>- FOS = 0,5 / FOT = 0,7<br>- DENSIDAD 150 hab/ha<br>- ALTURA MÁMIXA = 8m / PB+1<br>- RETIRO FRENTE = 6 m<br>- RETIRO FONDO = 8m<br><br>METROS CONSTRUIBLES = 101.500 m2",
+        "Descripción": "RE1 / RE2 (RESIDENCIAL EXCLUSIVO",
+        "nombre": "Propietario Legal: AERO CLUB TUCUMAN SOCIEDAD CIVI",
+        "descripción": "- SUP DE LOTE = 145.000 m2\n- FOS = 0,5 / FOT = 0,7\n- DENSIDAD 150 hab/ha\n- ALTURA MÁMIXA = 8m / PB+1\n- RETIRO FRENTE = 6 m\n- RETIRO FONDO = 8m\n\nMETROS CONSTRUIBLES = 101.500 m2",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.3002674,
+              -26.7982184,
+              0.0
+            ],
+            [
+              -65.2998838,
+              -26.7965225,
+              0.0
+            ],
+            [
+              -65.3010262,
+              -26.7963187,
+              0.0
+            ],
+            [
+              -65.3014125,
+              -26.7980616,
+              0.0
+            ],
+            [
+              -65.3002674,
+              -26.7982184,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Padron Provincial: 875521",
+        "description": "Descripción: C6a ( CORREDOR URB. FUTURA)<br>nombre: Propietario Legal: OBISPADO DE LA DIOCESIS DE LA SANTISIMA CONCEPCION<br>descripción: - SUP DE LOTE = 25.800 m2<br>- FOS = 0,5 / FOT = 1<br>- DENSIDAD 250 hab/ha<br>- ALTURA MÁMIXA = 14m / PB+3<br>- RETIRO FRENTE = 8 m<br>- RETIRO FONDO = 12m<br><br>METROS CONSTRUIBLES = 25.800m2",
+        "Descripción": "C6a ( CORREDOR URB. FUTURA)",
+        "nombre": "Propietario Legal: OBISPADO DE LA DIOCESIS DE LA SANTISIMA CONCEPCION",
+        "descripción": "- SUP DE LOTE = 25.800 m2\n- FOS = 0,5 / FOT = 1\n- DENSIDAD 250 hab/ha\n- ALTURA MÁMIXA = 14m / PB+3\n- RETIRO FRENTE = 8 m\n- RETIRO FONDO = 12m\n\nMETROS CONSTRUIBLES = 25.800m2",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.3013466,
+              -26.8059552,
+              0.0
+            ],
+            [
+              -65.301415,
+              -26.8062246,
+              0.0
+            ],
+            [
+              -65.3007243,
+              -26.8063814,
+              0.0
+            ],
+            [
+              -65.3006425,
+              -26.8061073,
+              0.0
+            ],
+            [
+              -65.3013466,
+              -26.8059552,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Padron Provincial: 4780798",
+        "description": "Descripción: RE1 / RE2 (RESIDENCIAL EXCLUSIVO<br>nombre: 1) Propietario Legal: GRAÑA, EMILIO MARCIAL<br>descripción: - SUP DE LOTE = 1.786 m2<br>- FOS = 0,5 / FOT = 0,7<br>- DENSIDAD 150 hab/ha<br>- ALTURA MÁMIXA = 8m / PB+1<br>- RETIRO FRENTE = 6 m<br>- RETIRO FONDO = 8m<br><br>METROS CONSTRUIBLES = 1.250 m",
+        "Descripción": "RE1 / RE2 (RESIDENCIAL EXCLUSIVO",
+        "nombre": "1) Propietario Legal: GRAÑA, EMILIO MARCIAL",
+        "descripción": "- SUP DE LOTE = 1.786 m2\n- FOS = 0,5 / FOT = 0,7\n- DENSIDAD 150 hab/ha\n- ALTURA MÁMIXA = 8m / PB+1\n- RETIRO FRENTE = 6 m\n- RETIRO FONDO = 8m\n\nMETROS CONSTRUIBLES = 1.250 m",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.2998312,
+              -26.8062712,
+              0.0
+            ],
+            [
+              -65.2999171,
+              -26.8065872,
+              0.0
+            ],
+            [
+              -65.2992572,
+              -26.8067236,
+              0.0
+            ],
+            [
+              -65.2991714,
+              -26.8064076,
+              0.0
+            ],
+            [
+              -65.2998312,
+              -26.8062712,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Padron Provincial: 878965",
+        "description": "Descripción: C3c<br>nombre: 1) Propietario Legal: LOS CINCO ARGENTINA S.A.S. (20.00%)<br>2) Propietario Legal: LOPEZ GONZALEZ, JUAN MANUEL (20.00%)<br>3) Propietario Legal: LOPEZ GONZALEZ, LUIS ALEJANDRO (20.00%)<br>4) Propietario Legal: LOPEZ GONZALEZ, EVELINA MARIA (20.00%)<br>5) Propietario Legal: LOPEZ GONZALEZ, CARLOS GUILLERMO (20.00%)<br>descripción: - SUP DE LOTE = 2.100 m2<br>- FOS = 0,5/6 / FOT = 0.9<br>- DENSIDAD 250 hab/ha<br>- ALTURA MÁMIXA = 11m / PB+2<br>- RETIRO FRENTE = 8 m<br>- RETIRO FONDO = 10m<br><br>METROS CONSTRUIBLES = 1.890 m2",
+        "Descripción": "C3c",
+        "nombre": "1) Propietario Legal: LOS CINCO ARGENTINA S.A.S. (20.00%)\n2) Propietario Legal: LOPEZ GONZALEZ, JUAN MANUEL (20.00%)\n3) Propietario Legal: LOPEZ GONZALEZ, LUIS ALEJANDRO (20.00%)\n4) Propietario Legal: LOPEZ GONZALEZ, EVELINA MARIA (20.00%)\n5) Propietario Legal: LOPEZ GONZALEZ, CARLOS GUILLERMO (20.00%)",
+        "descripción": "- SUP DE LOTE = 2.100 m2\n- FOS = 0,5/6 / FOT = 0.9\n- DENSIDAD 250 hab/ha\n- ALTURA MÁMIXA = 11m / PB+2\n- RETIRO FRENTE = 8 m\n- RETIRO FONDO = 10m\n\nMETROS CONSTRUIBLES = 1.890 m2",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -65.2665507,
+            -26.7820074,
+            0.0
+          ],
+          [
+            -65.2675807,
+            -26.7828502,
+            0.0
+          ],
+          [
+            -65.2664155,
+            -26.7834603,
+            0.0
+          ],
+          [
+            -65.267409,
+            -26.7904356,
+            0.0
+          ],
+          [
+            -65.2668082,
+            -26.7906655,
+            0.0
+          ],
+          [
+            -65.2708091,
+            -26.8040587,
+            0.0
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Av. Fanzolato",
+        "description": "Descripción: <br>nombre: <br>descripción:",
+        "Descripción": "",
+        "nombre": "",
+        "descripción": "",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.2773117,
+              -26.8039429,
+              0.0
+            ],
+            [
+              -65.2776107,
+              -26.8051792,
+              0.0
+            ],
+            [
+              -65.2769039,
+              -26.8052869,
+              0.0
+            ],
+            [
+              -65.2766103,
+              -26.8040148,
+              0.0
+            ],
+            [
+              -65.2773117,
+              -26.8039429,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Padron Provincial: 283945 /46/78/48",
+        "description": "Descripción: C1b ( CORREDOR )<br>nombre: 1) Propietario Legal: D'ANDREA, JUAN CARLOS (50.00%)<br>2) Propietario Legal: ZULLI DE D'ANDREA, LUCIA DEL VALLE (50.00%)<br>1) Propietario Legal: DELPERO, ALFREDO ANDRES (100.00%)<br>1) Propietario Legal: DELPERO, ANDRES ADOLFO (100.00%)<br>1) Propietario Legal: ROSSI, ARGENTINA (100.00%)<br>descripción: - SUP DE LOTE =10.200 m2<br>- FOS = 0,5 / FOT = 1,1<br>- DENSIDAD 300 hab/ha<br>- ALTURA MÁMIXA = 17m / PB+4<br>- RETIRO FRENTE = 8 m<br>- RETIRO FONDO = 15m<br><br>METROS CONSTRUIBLES = 11.220 m2",
+        "Descripción": "C1b ( CORREDOR )",
+        "nombre": "1) Propietario Legal: D'ANDREA, JUAN CARLOS (50.00%)\n2) Propietario Legal: ZULLI DE D'ANDREA, LUCIA DEL VALLE (50.00%)\n1) Propietario Legal: DELPERO, ALFREDO ANDRES (100.00%)\n1) Propietario Legal: DELPERO, ANDRES ADOLFO (100.00%)\n1) Propietario Legal: ROSSI, ARGENTINA (100.00%)",
+        "descripción": "- SUP DE LOTE =10.200 m2\n- FOS = 0,5 / FOT = 1,1\n- DENSIDAD 300 hab/ha\n- ALTURA MÁMIXA = 17m / PB+4\n- RETIRO FRENTE = 8 m\n- RETIRO FONDO = 15m\n\nMETROS CONSTRUIBLES = 11.220 m2",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.2776107,
+              -26.8051792,
+              0.0
+            ],
+            [
+              -65.2781444,
+              -26.8073727,
+              0.0
+            ],
+            [
+              -65.2774202,
+              -26.807502,
+              0.0
+            ],
+            [
+              -65.2769039,
+              -26.8052869,
+              0.0
+            ],
+            [
+              -65.2776107,
+              -26.8051792,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Padron Provincial: 283945 /46/78/48",
+        "description": "Descripción: C5b <br>nombre: <br>descripción: - SUP DE LOTE = 17.295 m2<br>- FOS = 0,5 / FOT = 0,9<br>- DENSIDAD 250 hab/ha<br>- ALTURA MÁMIXA = 11m / PB+2<br>- RETIRO FRENTE = 8 m<br>- RETIRO FONDO = 10m<br><br>METROS CONSTRUIBLES = 15.565 m2",
+        "Descripción": "C5b ",
+        "nombre": "",
+        "descripción": "- SUP DE LOTE = 17.295 m2\n- FOS = 0,5 / FOT = 0,9\n- DENSIDAD 250 hab/ha\n- ALTURA MÁMIXA = 11m / PB+2\n- RETIRO FRENTE = 8 m\n- RETIRO FONDO = 10m\n\nMETROS CONSTRUIBLES = 15.565 m2",
+        "_folder": "COU"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.3146388,
+              -26.7943087,
+              0.0
+            ],
+            [
+              -65.315818,
+              -26.8008446,
+              0.0
+            ],
+            [
+              -65.3112582,
+              -26.7998487,
+              0.0
+            ],
+            [
+              -65.3054218,
+              -26.8005191,
+              0.0
+            ],
+            [
+              -65.2995209,
+              -26.8006723,
+              0.0
+            ],
+            [
+              -65.286582,
+              -26.8024344,
+              0.0
+            ],
+            [
+              -65.2726344,
+              -26.8038325,
+              0.0
+            ],
+            [
+              -65.2730422,
+              -26.8010362,
+              0.0
+            ],
+            [
+              -65.3146388,
+              -26.7943087,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "PERÓN NORTE",
+        "description": "descripción: <br>Nombre: Polígono 21",
+        "descripción": "",
+        "Nombre": "Polígono 21",
+        "_folder": "ZONAS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.3149954,
+              -26.8010805,
+              0.0
+            ],
+            [
+              -65.2704107,
+              -26.8087666,
+              0.0
+            ],
+            [
+              -65.2692895,
+              -26.8049411,
+              0.0
+            ],
+            [
+              -65.2705984,
+              -26.8045245,
+              0.0
+            ],
+            [
+              -65.2722024,
+              -26.8043091,
+              0.0
+            ],
+            [
+              -65.2888229,
+              -26.802659,
+              0.0
+            ],
+            [
+              -65.2961185,
+              -26.8014907,
+              0.0
+            ],
+            [
+              -65.2963867,
+              -26.8012896,
+              0.0
+            ],
+            [
+              -65.3027378,
+              -26.8007501,
+              0.0
+            ],
+            [
+              -65.3047816,
+              -26.8009656,
+              0.0
+            ],
+            [
+              -65.3052,
+              -26.8009656,
+              0.0
+            ],
+            [
+              -65.3106288,
+              -26.8002186,
+              0.0
+            ],
+            [
+              -65.3111653,
+              -26.8003048,
+              0.0
+            ],
+            [
+              -65.3149954,
+              -26.8010805,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "PERÓN SUR",
+        "description": "descripción: <br>Nombre:",
+        "descripción": "",
+        "Nombre": "",
+        "_folder": "ZONAS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.3081901,
+              -26.8022346,
+              0.0
+            ],
+            [
+              -65.3087694,
+              -26.8049926,
+              0.0
+            ],
+            [
+              -65.2957714,
+              -26.807377,
+              0.0
+            ],
+            [
+              -65.2950231,
+              -26.8046072,
+              0.0
+            ],
+            [
+              -65.3081901,
+              -26.8022346,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "ZONA POTENCIAL",
+        "description": "descripción: <br>Nombre:",
+        "descripción": "",
+        "Nombre": "",
+        "_folder": "ZONAS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.294925,
+              -26.8132631,
+              0.0
+            ],
+            [
+              -65.2961849,
+              -26.8197353,
+              0.0
+            ],
+            [
+              -65.2854132,
+              -26.8217077,
+              0.0
+            ],
+            [
+              -65.2840138,
+              -26.815092,
+              0.0
+            ],
+            [
+              -65.294925,
+              -26.8132631,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "CASCO VIEJO",
+        "description": "descripción: <br>Nombre:",
+        "descripción": "",
+        "Nombre": "",
+        "_folder": "ZONAS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.2873233,
+              -26.8116866,
+              0.0
+            ],
+            [
+              -65.2880529,
+              -26.8141379,
+              0.0
+            ],
+            [
+              -65.2777854,
+              -26.8160721,
+              0.0
+            ],
+            [
+              -65.2771738,
+              -26.8135443,
+              0.0
+            ],
+            [
+              -65.2873233,
+              -26.8116866,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "ZONA POTENCIAL LAS ROSAS",
+        "description": "descripción: <br>Nombre: Polígono 33",
+        "descripción": "",
+        "Nombre": "Polígono 33",
+        "_folder": "ZONAS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.270471,
+              -26.781085,
+              0.0
+            ],
+            [
+              -65.270223,
+              -26.7887355,
+              0.0
+            ],
+            [
+              -65.2702015,
+              -26.789789,
+              0.0
+            ],
+            [
+              -65.2753514,
+              -26.788429,
+              0.0
+            ],
+            [
+              -65.2735919,
+              -26.796263,
+              0.0
+            ],
+            [
+              -65.2701372,
+              -26.7966461,
+              0.0
+            ],
+            [
+              -65.2679485,
+              -26.7956118,
+              0.0
+            ],
+            [
+              -65.2662533,
+              -26.7905168,
+              0.0
+            ],
+            [
+              -65.258829,
+              -26.79203,
+              0.0
+            ],
+            [
+              -65.2583998,
+              -26.7915512,
+              0.0
+            ],
+            [
+              -65.2664679,
+              -26.789923,
+              0.0
+            ],
+            [
+              -65.2657169,
+              -26.7839084,
+              0.0
+            ],
+            [
+              -65.270471,
+              -26.781085,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "ZONA YERBA BUENA NORTE",
+        "description": "descripción: <br>Nombre: Polígono 32",
+        "descripción": "",
+        "Nombre": "Polígono 32",
+        "_folder": "ZONAS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.3066606,
+              -26.8025364,
+              0.0
+            ],
+            [
+              -65.3067599,
+              -26.8030272,
+              0.0
+            ],
+            [
+              -65.3055744,
+              -26.8032616,
+              0.0
+            ],
+            [
+              -65.3054482,
+              -26.8027422,
+              0.0
+            ],
+            [
+              -65.3066606,
+              -26.8025364,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Padron Provincial: 879865",
+        "description": "descripción: C5c (Corredor)<br>Nombre: 1) Propietario Legal: NAIDICZ, JOSE ERNESTO (50.00%)<br>2) Propietario Legal: NIETO, JOSEFINA LUISA (50.00%)<br>Descripción: - SUP DE LOTE = 5.700m2<br>- FOS = 0,5 / FOT = 0.9<br>- DENSIDAD 200 hab/ha<br>- ALTURA MÁMIXA = 11m / PB+2<br>- RETIRO FRENTE = 8 m<br>- RETIRO FONDO = 10m<br><br>METROS CONSTRUIBLES = 5.130 m2",
+        "descripción": "C5c (Corredor)",
+        "Nombre": "1) Propietario Legal: NAIDICZ, JOSE ERNESTO (50.00%)\n2) Propietario Legal: NIETO, JOSEFINA LUISA (50.00%)",
+        "Descripción": "- SUP DE LOTE = 5.700m2\n- FOS = 0,5 / FOT = 0.9\n- DENSIDAD 200 hab/ha\n- ALTURA MÁMIXA = 11m / PB+2\n- RETIRO FRENTE = 8 m\n- RETIRO FONDO = 10m\n\nMETROS CONSTRUIBLES = 5.130 m2",
+        "_folder": "Zona de completamiento"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -65.2769577,
+              -26.811862,
+              0.0
+            ],
+            [
+              -65.2773118,
+              -26.8134755,
+              0.0
+            ],
+            [
+              -65.2767968,
+              -26.8135568,
+              0.0
+            ],
+            [
+              -65.2764695,
+              -26.8119578,
+              0.0
+            ],
+            [
+              -65.2769577,
+              -26.811862,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Zona las rosas C5b",
+        "description": "descripción: <br>Nombre: <br>Descripción:",
+        "descripción": "",
+        "Nombre": "",
+        "Descripción": "",
+        "_folder": "Zona de completamiento"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -65.2704229,
+            -26.7967424,
+            0.0
+          ],
+          [
+            -65.313982,
+            -26.7911495,
+            0.0
+          ]
+        ]
+      },
+      "properties": {
+        "name": "",
+        "description": "descripción: <br>Descripción: <br>Nombre: Calle Monteagudo",
+        "descripción": "",
+        "Descripción": "",
+        "Nombre": "Calle Monteagudo",
+        "_folder": "VIAS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -65.2892537,
+            -26.8021008,
+            0.0
+          ],
+          [
+            -65.2876014,
+            -26.794497,
+            0.0
+          ]
+        ]
+      },
+      "properties": {
+        "name": "",
+        "description": "descripción: <br>Descripción: <br>Nombre: Boulevard",
+        "descripción": "",
+        "Descripción": "",
+        "Nombre": "Boulevard",
+        "_folder": "VIAS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -65.2664155,
+            -26.7834603,
+            0.0
+          ],
+          [
+            -65.2669038,
+            -26.7909196,
+            0.0
+          ],
+          [
+            -65.2708091,
+            -26.8040587,
+            0.0
+          ]
+        ]
+      },
+      "properties": {
+        "name": "",
+        "description": "descripción: <br>Descripción: <br>Nombre: Av. Fanzolato",
+        "descripción": "",
+        "Descripción": "",
+        "Nombre": "Av. Fanzolato",
+        "_folder": "VIAS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -65.2753372,
+            -26.8040786,
+            0.0
+          ],
+          [
+            -65.2780194,
+            -26.8159331,
+            0.0
+          ]
+        ]
+      },
+      "properties": {
+        "name": "",
+        "description": "descripción: <br>Descripción: <br>Nombre: LAS ROSAS",
+        "descripción": "",
+        "Descripción": "",
+        "Nombre": "LAS ROSAS",
+        "_folder": "VIAS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -65.2704229,
+            -26.7967424,
+            0.0
+          ],
+          [
+            -65.2699723,
+            -26.7967816,
+            0.0
+          ],
+          [
+            -65.268304,
+            -26.795642,
+            0.0
+          ]
+        ]
+      },
+      "properties": {
+        "name": "",
+        "description": "descripción: <br>Descripción: <br>Nombre: Línea 25",
+        "descripción": "",
+        "Descripción": "",
+        "Nombre": "Línea 25",
+        "_folder": "VIAS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -65.2752596,
+            -26.8035572,
+            0.0
+          ],
+          [
+            -65.2746159,
+            -26.8004928,
+            0.0
+          ]
+        ]
+      },
+      "properties": {
+        "name": "",
+        "description": "descripción: <br>Descripción: <br>Nombre: Línea 27",
+        "descripción": "",
+        "Descripción": "",
+        "Nombre": "Línea 27",
+        "_folder": "VIAS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -65.2891642,
+            -26.80214,
+            0.0
+          ],
+          [
+            -65.2875334,
+            -26.7945553,
+            0.0
+          ]
+        ]
+      },
+      "properties": {
+        "name": "",
+        "description": "descripción: <br>Descripción: <br>Nombre: Boulevard futuro",
+        "descripción": "",
+        "Descripción": "",
+        "Nombre": "Boulevard futuro ",
+        "_folder": "VIAS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -65.2840145,
+            -26.7857693,
+            0.0
+          ],
+          [
+            -65.2668484,
+            -26.7903665,
+            0.0
+          ]
+        ]
+      },
+      "properties": {
+        "name": "",
+        "description": "descripción: <br>Descripción: <br>Nombre: Calle Roca",
+        "descripción": "",
+        "Descripción": "",
+        "Nombre": "Calle Roca",
+        "_folder": "VIAS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -65.3145315,
+            -26.7941555,
+            0.0
+          ],
+          [
+            -65.2726974,
+            -26.8009177,
+            0.0
+          ]
+        ]
+      },
+      "properties": {
+        "name": "",
+        "description": "descripción: <br>Descripción: <br>Nombre: Av. Central",
+        "descripción": "",
+        "Descripción": "",
+        "Nombre": "Av. Central",
+        "_folder": "VIAS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -65.301254,
+            -26.8116285,
+            0.0
+          ],
+          [
+            -65.2944949,
+            -26.7837511,
+            0.0
+          ]
+        ]
+      },
+      "properties": {
+        "name": "",
+        "description": "descripción: <br>Descripción: <br>Nombre: Calle Maderuelo",
+        "descripción": "",
+        "Descripción": "",
+        "Nombre": "Calle Maderuelo",
+        "_folder": "VIAS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -65.2693749,
+          -26.792773,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "LOTE ABIERTO = 160 USD / 1 m2",
+        "description": "$160 USD <br>Comercializa Gerardo Peña",
+        "_folder": "PRECIO POR ZONAS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -65.3061311,
+          -26.8027735,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "BARRIO ABIERTO = 80 USD / 1M2",
+        "description": "80 USD 1m2<br>Comercializa ISN",
+        "_folder": "PRECIO POR ZONAS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -65.2899254,
+          -26.8189176,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "BARRIO ABIERTO = 460 USD / 1M2",
+        "description": "CASA MAS TERRENO 460.000 USD<br>Sup Terreno 1.000 m2<br>Sup Cub 350m2",
+        "_folder": "PRECIO POR ZONAS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -65.2985346,
+          -26.801754,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "BARRIO ABIERTO = 460 USD 1 /m2",
+        "description": "Casa en venta = 124.000 USD <br>Sup. del lote 270 m2 <br>Comercializa Porta",
+        "_folder": "PRECIO POR ZONAS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -65.2961498,
+          -26.8176979,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "BARRIO ABIERTO =416 USD / 1m2",
+        "description": "SUP DE TERRENO 1151 m2<br>Precio 480.000 USD",
+        "_folder": "PRECIO POR ZONAS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -65.2961393,
+          -26.8168849,
+          0.0
+        ]
+      },
+      "properties": {
+        "name": "BARRIO ABIERTO = 610 USD / 1 m2",
+        "description": "",
+        "_folder": "PRECIO POR ZONAS"
+      }
+    }
+  ]
+}

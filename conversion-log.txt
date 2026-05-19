@@ -1,0 +1,25 @@
+Fecha de conversión : 2026-05-19 12:31:05
+Archivo fuente      : KMZ Base Completo.kmz
+Archivo destino     : assets/geojson/capas-base.geojson
+Total de features   : 50
+
+Tipos de geometría:
+  LineString: 13
+  Point: 6
+  Polygon: 31
+
+Capas / Folders:
+  COU
+  PRECIO POR ZONAS
+  VIAS
+  ZONAS
+  Zona de completamiento
+
+Propiedades encontradas:
+  Descripción
+  Nombre
+  _folder
+  descripción
+  description
+  name
+  nombre
