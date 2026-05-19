@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-19T18:00:00Z",
+  "timestamp": "2026-05-19T20:00:00Z",
   "edits": {
     "COU::Padron Provincial: 283945 /46/78/48": {
       "urb_FOS": "0,5",
@@ -13,11 +13,11 @@
     }
   },
   "layerState": {
-    "vias":               { "visible": true, "opacity": 0.8  },
-    "cou":                { "visible": true, "opacity": 1.0  },
-    "zonas":              { "visible": true, "opacity": 0.92 },
-    "zona_completamiento":{ "visible": true, "opacity": 1.0  },
-    "precio_zonas":       { "visible": true, "opacity": 0.64 }
+    "vias":                { "visible": true, "opacity": 0.8  },
+    "cou":                 { "visible": true, "opacity": 1.0  },
+    "zonas":               { "visible": true, "opacity": 0.92 },
+    "zona_completamiento": { "visible": true, "opacity": 1.0  },
+    "precio_zonas":        { "visible": true, "opacity": 0.64 }
   },
   "zoning": {
     "visible": true,
@@ -26,6 +26,9 @@
     "lng": -65.293,
     "scale": 4.004938846267392,
     "rotation": -0.503153523294813,
-    "customBounds": null
+    "customBounds": [
+      [-26.843026353893197, -65.38055219710452],
+      [-26.762508778725934, -65.25340630502318]
+    ]
   }
 }
