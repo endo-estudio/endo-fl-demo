@@ -82,6 +82,22 @@ input[type="text"],textarea { text-transform:uppercase; }
 }
 .btn-github:hover { background:rgba(16,185,129,0.18); border-color:#10b981; }
 .btn-github:disabled { opacity:0.5; cursor:not-allowed; }
+.btn-dl {
+  font-family:'Poppins',sans-serif; font-size:9px; font-weight:700;
+  letter-spacing:2px; color:#60a5fa;
+  border:1px solid rgba(96,165,250,0.4); background:rgba(96,165,250,0.08);
+  padding:5px 14px; border-radius:20px; cursor:pointer; text-transform:uppercase;
+  transition:all 0.15s;
+}
+.btn-dl:hover { background:rgba(96,165,250,0.18); border-color:#60a5fa; }
+.btn-ul {
+  font-family:'Poppins',sans-serif; font-size:9px; font-weight:700;
+  letter-spacing:2px; color:#a78bfa;
+  border:1px solid rgba(167,139,250,0.4); background:rgba(167,139,250,0.08);
+  padding:5px 14px; border-radius:20px; cursor:pointer; text-transform:uppercase;
+  transition:all 0.15s;
+}
+.btn-ul:hover { background:rgba(167,139,250,0.18); border-color:#a78bfa; }
 
 /* ── TOAST ─────────────────────────────────── */
 .toast {
@@ -400,7 +416,10 @@ textarea.notas-ta::placeholder { color:var(--text-3); font-style:italic; }
     <div class="meta-pill" id="pill-feat">— FEATURES</div>
     <div class="meta-pill" id="pill-cap">— CAPAS</div>
     <button class="btn-github" id="btn-github">↑ GUARDAR EN GITHUB</button>
+    <button class="btn-dl" onclick="descargaJSON()">↓ DESCARGAR</button>
+    <button class="btn-ul" onclick="cargaJSON()">↑ CARGAR</button>
     <button class="btn-export" id="btn-export">↓ EXPORTAR</button>
+    <input type="file" id="fi-datos" accept=".json" style="display:none">
   </div>
 </header>
 
@@ -1154,6 +1173,75 @@ async function cargarCambiosDesdeGitHub() {
   }
 }
 
+// ── DESCARGA / CARGA JSON ────────────────────────────────────────────────────
+function descargaJSON() {
+  const fecha = new Date().toISOString().slice(0, 10);
+  const payload = {
+    timestamp:  new Date().toISOString(),
+    titulo:     document.getElementById('hdr-title')?.textContent.trim() ?? '',
+    subtitulo:  document.getElementById('hdr-sub')?.textContent.trim()   ?? '',
+    layerState: S.layerState,
+    zoning:     S.zoning,
+    edits:      S.edits,
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = Object.assign(document.createElement('a'), { href:url, download:`datos-editables-${fecha}.json` });
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function cargaJSON() {
+  document.getElementById('fi-datos').click();
+}
+
+function procesarArchivoJSON(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.edits)      Object.assign(S.edits,      data.edits);
+      if (data.layerState) Object.assign(S.layerState, data.layerState);
+      if (data.zoning)     Object.assign(S.zoning,     data.zoning);
+      if (data.titulo)     { S.title    = data.titulo;    document.getElementById('hdr-title').textContent = S.title; }
+      if (data.subtitulo)  { S.subtitle = data.subtitulo; document.getElementById('hdr-sub').textContent   = S.subtitle; }
+      persist();
+
+      // Refrescar overlay ZONING
+      applyZoningState();
+      const opZ = document.getElementById('op-zoning');
+      const opZv = document.getElementById('op-zoning-v');
+      const chkZ = document.getElementById('chk-zoning');
+      if (opZ && opZv) { const v = Math.round(S.zoning.opacity*100); opZ.value = v; opZv.textContent = v+'%'; }
+      if (chkZ) chkZ.checked = S.zoning.visible;
+
+      // Refrescar capas GeoJSON (colores/opacidades)
+      S.capas.forEach(c => {
+        updateCapa(c.id);
+        const chk = document.querySelector(`input[data-id="${c.id}"]`);
+        const rng = document.getElementById(`op-${c.id}`);
+        const val = document.getElementById(`op-${c.id}-v`);
+        const vis = S.layerState[c.id]?.visible !== false;
+        if (chk) chk.checked = vis;
+        if (rng && val) {
+          const op = Math.round((S.layerState[c.id]?.opacity ?? c.opacidad ?? 0.6) * 100);
+          rng.value = op; val.textContent = op + '%';
+        }
+        if (S.layers[c.id]) { if (vis) S.layers[c.id].addTo(S.map); else S.map.removeLayer(S.layers[c.id]); }
+      });
+
+      // Refrescar panel info si hay feature seleccionado
+      if (S.selected) showFeature(S.selected.feature, getCapa(S.selected.capaId));
+
+      showToast('✓ DATOS CARGADOS DESDE ARCHIVO', 'success');
+    } catch(err) {
+      showToast('ERROR: ARCHIVO JSON INVÁLIDO', 'error');
+    }
+  };
+  reader.readAsText(file);
+}
+
 // ── BOOT ─────────────────────────────────────────────────────────────────────
 async function boot() {
   loadSaved();
@@ -1178,6 +1266,10 @@ async function boot() {
     document.getElementById('loading').classList.add('hidden');
     document.getElementById('btn-export').addEventListener('click', exportData);
     document.getElementById('btn-github').addEventListener('click', guardarAGitHub);
+    document.getElementById('fi-datos').addEventListener('change', e => {
+      procesarArchivoJSON(e.target.files[0]);
+      e.target.value = '';
+    });
   } catch(err) {
     console.error(err);
     document.getElementById('loading').classList.add('hidden');
