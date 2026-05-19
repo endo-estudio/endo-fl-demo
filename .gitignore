@@ -3,4 +3,5 @@ node_modules/
 *.local
 .env
 config.local.js
+config.js
 .git
