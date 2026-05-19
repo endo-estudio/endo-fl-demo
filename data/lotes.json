@@ -1,0 +1,29 @@
+{
+  "version": "1.0",
+  "descripcion": "Base de datos de lotes disponibles para Find Landing",
+  "ultima_actualizacion": "2026-05-19",
+  "lotes": [
+    {
+      "id": "LOTE-001",
+      "nombre": "",
+      "zona": "",
+      "capa_ref": "",
+      "estado": "disponible",
+      "superficie_m2": null,
+      "precio_usd": null,
+      "precio_m2_usd": null,
+      "coordenadas": {
+        "lat": null,
+        "lng": null
+      },
+      "propiedades": {
+        "descripcion": "",
+        "acceso": "",
+        "servicios": [],
+        "observaciones": ""
+      }
+    }
+  ],
+  "estados_posibles": ["disponible", "reservado", "vendido", "consultar"],
+  "zonas_ref": ["COU", "ZONAS", "Zona de completamiento", "VIAS", "PRECIO POR ZONAS"]
+}

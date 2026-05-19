@@ -1,0 +1,62 @@
+{
+  "version": "1.0",
+  "fuente": "KMZ Base Completo.kmz",
+  "fecha_conversion": "2026-05-19",
+  "capas": [
+    {
+      "id": "cou",
+      "nombre": "COU",
+      "descripcion": "Cobertura de uso del suelo. Incluye polígonos y límites de zonas.",
+      "geometrias": ["Polygon", "LineString"],
+      "total_features": 26,
+      "propiedades": ["name", "nombre", "description", "Descripción", "descripción"],
+      "visible": true,
+      "color": "#F57C00",
+      "opacidad": 0.6
+    },
+    {
+      "id": "zonas",
+      "nombre": "ZONAS",
+      "descripcion": "Zonificación territorial del proyecto.",
+      "geometrias": ["Polygon"],
+      "total_features": 6,
+      "propiedades": ["name", "Nombre", "description", "descripción"],
+      "visible": true,
+      "color": "#4CAF50",
+      "opacidad": 0.5
+    },
+    {
+      "id": "zona_completamiento",
+      "nombre": "Zona de completamiento",
+      "descripcion": "Áreas de completamiento urbano identificadas.",
+      "geometrias": ["Polygon"],
+      "total_features": 2,
+      "propiedades": ["name", "Nombre", "description", "Descripción", "descripción"],
+      "visible": true,
+      "color": "#9C27B0",
+      "opacidad": 0.5
+    },
+    {
+      "id": "vias",
+      "nombre": "VIAS",
+      "descripcion": "Red vial del área de estudio.",
+      "geometrias": ["LineString"],
+      "total_features": 10,
+      "propiedades": ["name", "Nombre", "description", "Descripción", "descripción"],
+      "visible": true,
+      "color": "#212121",
+      "opacidad": 1.0
+    },
+    {
+      "id": "precio_zonas",
+      "nombre": "PRECIO POR ZONAS",
+      "descripcion": "Puntos de referencia de precios por zona.",
+      "geometrias": ["Point"],
+      "total_features": 6,
+      "propiedades": ["name", "description"],
+      "visible": true,
+      "color": "#FF5252",
+      "opacidad": 1.0
+    }
+  ]
+}
